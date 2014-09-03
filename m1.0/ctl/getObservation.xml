@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ctl:package
+  xmlns:getObservation="http://www.ioos.noaa.gov/sos/getObservation"
+  xmlns:ctl="http://www.occamlab.com/ctl"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ows="http://www.opengis.net/ows/1.1" 
+  xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:sos="http://www.opengis.net/sos/1.0"  
+  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
+  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+  xmlns:swe2="http://www.opengis.net/swe/2.0.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <ctl:test name="getObservation:allTests">
+    <ctl:param name="getObservationConstellation" />
+    <ctl:param name="observationCollectionDocument" />
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>ObservationCollection is valid.</ctl:assertion>
+    <ctl:code>
+      <ctl:call-test name="getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1">
+        <ctl:with-param name="getObservationConstellation" select="$getObservationConstellation"/>
+        <ctl:with-param name="observationCollectionDocument" select="$observationCollectionDocument"/>
+      </ctl:call-test>
+    </ctl:code>
+  </ctl:test>
+
+  <!-- TODO: getObservation:IOOS-SOS.GetObservation-ResponseMissingEventTimeData.1 -->
+
+  <ctl:test name="getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1">
+    <ctl:param name="getObservationConstellation" />
+    <ctl:param name="observationCollectionDocument" />
+    <ctl:assertion>GetObservation requests made for each ‘procedure’ element advertised in the Capabilities document produce the responses with &lt;om:procedure&gt; values that (a) match the ‘procedure’ values specified in the requests, and (c) are in a form of URN that conforms to the IOOS Conventions for Observing Asset Identifiers.</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="processUrns" select="$observationCollectionDocument/om:member/om:Observation/om:procedure/om:Process/gml:member/@xlink:href" />
+      <xsl:choose>
+        <xsl:when test="not($processUrns) or count($processUrns) = 0">
+          <ctl:message>FAIL: No om:process members found</ctl:message>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:for-each select="$processUrns">
+            <xsl:variable name="processUrn" select="." />
+            <xsl:if test="not(matches($processUrn, '^urn:ioos:station(:[a-zA-Z0-9_\.]+){2,2}'))">
+              <ctl:message select="concat('FAIL: Process URN ', $processUrn, ' is not a valid IOOS station URN')" />
+              <ctl:fail />
+            </xsl:if>
+          </xsl:for-each>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+</ctl:package>
+

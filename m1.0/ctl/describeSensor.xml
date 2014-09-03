@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ctl:package
+  xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor"
+  xmlns:ctl="http://www.occamlab.com/ctl"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ows="http://www.opengis.net/ows/1.1" 
+  xmlns:gml="http://www.opengis.net/gml" 
+  xmlns:sos="http://www.opengis.net/sos/1.0"  
+  xmlns:xml="http://www.w3.org/XML/1998/namespace"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
+  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <ctl:test name="describeSensor:allTests">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML is valid.</ctl:assertion>
+    <ctl:code>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
+    </ctl:code>
+  </ctl:test>
+
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document provides ioosTemplateVersion value in the sml:capabilities[@name=“ioosServiceMetadata] element.</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="ioosTemplateVersion" select="$sensorMLDocument/sml:capabilities[@name='ioosServiceMetadata']/swe:SimpleDataRecord/swe:field[@name='ioosTemplateVersion']" />
+      <xsl:choose>
+        <xsl:when test="not($ioosTemplateVersion)">
+          <ctl:message>FAIL: ioosTemplateVersion not found</ctl:message>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:variable name="text" select="$ioosTemplateVersion/swe:Text" />
+          <xsl:choose>
+            <xsl:when test="not($text)">
+               <ctl:message>FAIL: swe:Text not found</ctl:message>
+               <ctl:fail />
+            </xsl:when>
+            <xsl:otherwise>
+              <xsl:if test="not($text/@definition)">
+                <ctl:message>FAIL: swe:Text doesn't have a definition</ctl:message>
+                <ctl:fail />
+              </xsl:if>
+              <xsl:choose>
+                <xsl:when test="$text/swe:value">
+                  <xsl:if test="$text/swe:value/text() != '1.0'">
+                    <ctl:message>FAIL: swe:value should be "1.0" (or do we have a new version?)</ctl:message>
+                    <ctl:fail />
+                  </xsl:if>
+                </xsl:when>
+                <xsl:otherwise>
+                  <ctl:message>FAIL: swe:Text has no swe:value</ctl:message>
+                  <ctl:fail />
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:otherwise>
+          </xsl:choose>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+</ctl:package>
+

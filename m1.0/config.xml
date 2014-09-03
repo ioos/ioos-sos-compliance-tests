@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Add this entry to TE_BASE/config.xml (//organization/standard) -->
+<organization>
+  <name>IOOS</name>
+  <standard>
+    <name>IOOS SOS Templates</name>
+    <version>
+      <name>1.0</name>
+      <suite>
+        <namespace-uri>http://www.ioos.noaa.gov/sos/1.0</namespace-uri>
+        <prefix>ioos-sos</prefix>
+        <local-name>suite</local-name>
+        <title>IOOS SOS 1.0 Conformance Test Suite</title>
+        <description>Checks service implementations for conformance to IOOS SOS m1.0</description>
+      </suite>
+      <revision>
+        <name>r1</name>
+        <sources>
+          <source>ioos-sos-compliance-tests/m1.0/ctl</source>
+        </sources>
+        <resources>ioos-sos-compliance-tests/resources</resources>
+        <webdir>ioos-sos-compliance-tests/m1.0/web</webdir>
+      </revision>
+    </version>
+  </standard>
+</organization>
