@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<config>
+  <serviceUrl>http://ioossos.axiomalaska.com/52n-sos-ioos-dev/service</serviceUrl>
+  <describeSensor checkAll="false">
+    <procedures>
+      <procedure>urn:ioos:network:test:all</procedure>
+      <procedure>urn:ioos:station:test:0</procedure>
+      <procedure>urn:ioos:sensor:test:0:air_temperature</procedure>
+      <procedure>urn:ioos:sensor:test:0:sea_water_temperature</procedure>
+    </procedures>
+  </describeSensor>
+  <getObservation>
+    <getObservationConstellations>
+      <getObservationConstellation>
+        <offering>urn:ioos:network:test:all</offering>
+        <procedures>
+          <procedure>urn:ioos:sensor:test:1:air_temperature</procedure>
+        </procedures>
+        <observedProperties>
+          <observedProperty>http://mmisw.org/ont/cf/parameter/air_temperature</observedProperty>
+        </observedProperties>
+      </getObservationConstellation>
+    </getObservationConstellations>
+  </getObservation>
+</config>
