@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <config>
+  <!-- The service endpoint of the SOS server to be tested -->
   <serviceUrl>http://ioossos.axiomalaska.com/52n-sos-ioos-dev/service</serviceUrl>
+  <!-- checkAll="true" to run describeSensor tests on all procedures in the SOS. Otherwise list below -->
   <describeSensor checkAll="false">
     <procedures>
       <procedure>urn:ioos:network:test:all</procedure>
@@ -10,6 +12,7 @@
     </procedures>
   </describeSensor>
   <getObservation>
+    <!-- constellations of getObservation request values to use to run tests -->
     <getObservationConstellations>
       <getObservationConstellation>
         <offering>urn:ioos:network:test:all</offering>
