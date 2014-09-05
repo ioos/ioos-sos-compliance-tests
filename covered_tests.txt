@@ -1,3 +1,4 @@
 describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2
 getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1
