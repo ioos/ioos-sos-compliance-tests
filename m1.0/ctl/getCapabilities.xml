@@ -9,6 +9,7 @@
   xmlns:xml="http://www.w3.org/XML/1998/namespace"
   xmlns:ogc="http://www.opengis.net/ogc"
   xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
@@ -20,6 +21,12 @@
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
       <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4">
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
     </ctl:code>
@@ -75,6 +82,48 @@
           </xsl:if>
           <xsl:if test="lower-case($allOffering/gml:name) != $allOffering/gml:name">
             <ctl:message>FAIL: "all" offering gml:name is not lowercase</ctl:message>
+            <ctl:fail />
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>ows:ExtendedCapabilities contains a valid ioosTemplateVersion value</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="ioosTemplateVersion" select="$capabilitiesDocument/ows:OperationsMetadata/ows:ExtendedCapabilities/gml:metaDataProperty[@xlink:title='ioosTemplateVersion']" />
+      <xsl:choose>
+        <xsl:when test="not($ioosTemplateVersion)">
+          <ctl:message>FAIL: ioosTemplateVersion not found</ctl:message>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="not($ioosTemplateVersion/@xlink:href)">
+            <ctl:message>FAIL: ioosTemplateVersion has no xlink:href</ctl:message>
+            <ctl:fail />
+          </xsl:if>
+          <xsl:if test="not($ioosTemplateVersion/gml:version) or $ioosTemplateVersion/gml:version = ''">
+            <ctl:message>FAIL: ioosTemplateVersion/gml:version is missing or empty</ctl:message>
+            <ctl:fail />
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>ows: ExtendedCapabilities contains a valid softwareVersion value</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="softwareVersion" select="$capabilitiesDocument/ows:OperationsMetadata/ows:ExtendedCapabilities/gml:metaDataProperty[@xlink:title='softwareVersion']" />
+      <xsl:choose>
+        <xsl:when test="not($softwareVersion)">
+          <ctl:message>FAIL: softwareVersion not found</ctl:message>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="not($softwareVersion/gml:version) or $softwareVersion/gml:version = ''">
+            <ctl:message>FAIL: softwareVersion/gml:version is missing or empty</ctl:message>
             <ctl:fail />
           </xsl:if>
         </xsl:otherwise>
