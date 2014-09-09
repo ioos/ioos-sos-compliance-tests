@@ -29,6 +29,12 @@
       <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4">
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -128,6 +134,37 @@
           </xsl:if>
         </xsl:otherwise>
       </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>The values in ows:Parameter/name/@outputFormat contain 'text/xml;subtype=“sensorML/1.0.1/profiles/ioos_sos/1.0”’</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="outputFormats" select="$capabilitiesDocument/ows:OperationsMetadata/ows:Operation[@name='DescribeSensor']/ows:Parameter[@name='outputFormat']/ows:AllowedValues" />
+      <xsl:choose>
+        <xsl:when test="not($outputFormats)">
+          <ctl:message>FAIL: DescribeSensor outputFormat AllowedValues not found</ctl:message>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <xsl:if test="not($outputFormats/ows:Value[matches(.,'text/xml;[ ].*?subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')])">
+            <ctl:message>FAIL: ows:Operation[@name='DescribeSensor' must have allowed outputFormat 'text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"'</ctl:message>
+            <ctl:fail />
+          </xsl:if>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>The values in the responseFormat element(s) for each ObservationOffering contain ‘text/xml; subtype=“om/1.0.0/profiles/ioos_sos/1.0”’</ctl:assertion>
+    <ctl:code>
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:if test="not(sos:responseFormat[matches(.,'text/xml;[ ].*?ssubtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')])">
+          <ctl:message select="concat('FAIL: responseFormat text/xml;subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot; not found in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+      </xsl:for-each>
     </ctl:code>
   </ctl:test>
 </ctl:package>
