@@ -41,6 +41,9 @@
       <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2">
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -205,6 +208,62 @@
           </xsl:when>
           <xsl:when test="gml:boundedBy/gml:Envelope/@srsName != 'http://www.opengis.net/def/crs/EPSG/0/4326'">
             <ctl:message select="concat('FAIL: gml:Envelope/@srsName != ''http://www.opengis.net/def/crs/EPSG/0/4326'' in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:for-each>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>Each sos:ObservationOffering provides beginPosition and endPosition values of TimePeriod, and (a) beginPosition value is earlier than endPosition; (b) beginPosition value is in ISO 8601 format (e.g. 2009-05-23T00:00:00.000Z), and (c) endPosition has either an inline value in ISO 8601 format or an attribute indeterminatePosition='now'</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="iso8601DateRegex" select="'^[1-2]\d{3}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d(:[0-5]\d)?(\.\d{1,3})?(Z|\+[0-1]\d:00)?$'" />
+
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:choose>
+          <xsl:when test="not(sos:time)">
+            <ctl:message select="concat('FAIL: No sos:time in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:time/gml:TimePeriod)">
+            <ctl:message select="concat('FAIL: No sos:time/gml:TimePeriod in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:time/gml:TimePeriod/gml:beginPosition)">
+            <ctl:message select="concat('FAIL: No sos:time/gml:TimePeriod/gml:beginPosition in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:beginPosition = ''">
+            <ctl:message select="concat('FAIL: sos:time/gml:TimePeriod/gml:beginPosition is empty in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:time/gml:TimePeriod/gml:endPosition)">
+            <ctl:message select="concat('FAIL: No sos:time/gml:TimePeriod/gml:endPosition in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition = ''">
+            <ctl:message select="concat('FAIL: sos:time/gml:TimePeriod/gml:endPosition is empty in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:beginPosition &gt; sos:time/gml:TimePeriod/gml:endPosition">
+            <ctl:message select="concat('FAIL: gml:beingPosition is after gml:endPosition in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:time/gml:TimePeriod/gml:beginPosition[matches(., $iso8601DateRegex)])">
+            <ctl:message select="concat('FAIL: gml:beginPosition is not a valid ISO 8601 date in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition = '' and not(sos:time/gml:TimePosition/gml:endPosition/@indeterminatePosition)">
+            <ctl:message select="concat('FAIL: gml:endPosition does not have ISO 8601 date or indeterminate position in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition and not(sos:time/gml:TimePeriod/gml:endPosition[matches(., $iso8601DateRegex)])">
+            <ctl:message select="concat('FAIL: gml:endPosition is not a valid ISO 8601 date in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition/@indeterminatePosition and not(sos:time/gml:TimePeriod/gml:endPosition[@indeterminatePosition='now'])">
+            <ctl:message select="concat('FAIL: gml:endPosition/@indeterminatePosition != ''now'' in ObservationOffering ', @gml:id)"/>
             <ctl:fail />
           </xsl:when>
         </xsl:choose>

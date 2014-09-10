@@ -7,4 +7,5 @@ getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1
 getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1
