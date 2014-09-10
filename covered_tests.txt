@@ -5,4 +5,6 @@ getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadata
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.1
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2
 getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1
