@@ -1,6 +1,9 @@
+Binary file /home/shane/git/ioos-sos-compliance-tests/m1.0/ctl/.getCapabilities.xml.swp matches
 describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3
 getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1
+getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2
 getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1
