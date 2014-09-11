@@ -44,6 +44,18 @@
       <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1">
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidProcedure.1">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.1">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.2">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidResponseMode.1">
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -267,6 +279,91 @@
             <ctl:fail />
           </xsl:when>
         </xsl:choose>
+      </xsl:for-each>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidProcedure.1">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>Each ObservationOffering provides just a single procedure, and the procedure value is (a) a URN that conforms to the IOOS Conventions for Observing Asset Identifiers, and (b) matches the gml:name value for this ObservationOffering.</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="ioosAssetUrnRegex" select="'^urn:ioos:(network|station|sensor)(:[A-Za-z0-9\._]+?){2,3}$'" />
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:choose>
+          <xsl:when test="not(sos:procedure)">
+            <ctl:message select="concat('FAIL: No sos:procedure in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="count(sos:procedure) &gt; 1">
+            <ctl:message select="concat('FAIL: More than one sos:procedure in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:procedure/@xlink:href)">
+            <ctl:message select="concat('FAIL: No sos:procedure/xlink:href in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(sos:procedure/@xlink:href[matches(., $ioosAssetUrnRegex)])">
+            <ctl:message select="concat('FAIL: sos:procedure/@xlink:href is not a valid IOOS asset URN in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(gml:name)">
+            <ctl:message select="concat('FAIL: No gml:name in ObservationOffering ', @gml:id)" />
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="sos:procedure/@xlink:href != gml:name">
+            <ctl:message select="concat('FAIL: sos:procedure/@xlink:href != gml:name in ObservationOffering ', @gml:id)" />
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:for-each>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.1">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>Each ObservationOffering provides at least one fully qualified sos:observedProperty element with the values of URLs corresponding to a Climate and Forecast (CF) Standard Name of the record in one of the IOOS Vocabularies.</ctl:assertion>
+    <ctl:code>
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:if test="not(sos:observedProperty)">
+          <ctl:message select="concat('FAIL: No sos:observedProperty in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+        <xsl:if test="sos:observedProperty/@xlink:href[not(starts-with(., 'http://mmisw.org/ont/'))]">
+          <ctl:message select="concat('FAIL: sos:observedProperty doesnt begin with MMISW URL prefix (http://mmisw.org/ont/) in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+      </xsl:for-each>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.2">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>None of the sos:observedProperty elements provides a value of vector phenomenon (i.e. wind, wave, current) instead of a scalar components of a composite phenomenon describing the vector, and defined in the IOOS Parameter Vocabulary (e.g.: http://mmisw.org/ont/ioos/parameter/wave).</ctl:assertion>
+    <ctl:code>
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:if test="not(sos:observedProperty)">
+          <ctl:message select="concat('FAIL: No sos:observedProperty in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+        <xsl:if test="sos:observedProperty/@xlink:href = 'http://mmisw.org/ont/ioos/parameter/wave'">
+          <ctl:message select="concat('FAIL: sos:observedProperty contains the vector ''http://mmisw.org/ont/ioos/parameter/wave'' (must be scalar) in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+      </xsl:for-each>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidResponseMode.1">
+    <ctl:param name="capabilitiesDocument" />
+    <ctl:assertion>Each ObservationOffering provides a valid responseMode value (i.e. one of the “inline”, “out-of-band”, “attached”, “resultTemplate” strings).</ctl:assertion>
+    <ctl:code>
+      <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
+        <xsl:if test="not(sos:responseMode)">
+          <ctl:message select="concat('FAIL: No sos:responseMode in ObservationOffering ', @gml:id)"/>
+          <ctl:fail />
+        </xsl:if>
+        <xsl:for-each select="sos:responseMode">
+          <xsl:if test=". != 'inline' and . != 'out-of-band' and . != 'attached' and . != 'resultTemplate'">
+            <ctl:message select="concat('FAIL: sos:responseMode had invalid value in ObservationOffering ', @gml:id)"/>
+            <ctl:fail />
+          </xsl:if>
+        </xsl:for-each>
       </xsl:for-each>
     </ctl:code>
   </ctl:test>
