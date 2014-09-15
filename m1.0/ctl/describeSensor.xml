@@ -21,6 +21,12 @@
       <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
         <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.2">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.3">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -38,8 +44,8 @@
           <xsl:variable name="text" select="$ioosTemplateVersion/swe:Text" />
           <xsl:choose>
             <xsl:when test="not($text)">
-               <ctl:message>FAIL: swe:Text not found</ctl:message>
-               <ctl:fail />
+              <ctl:message>FAIL: swe:Text not found</ctl:message>
+              <ctl:fail />
             </xsl:when>
             <xsl:otherwise>
               <xsl:if test="not($text/@definition)">
@@ -62,6 +68,66 @@
           </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.2">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document for a network of stations provides valid reference to the EPSG::4326 CRS in gml:boundedBy/gml:Envelope</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="gmlEnvelope" select="$sensorMLDocument/sml:member/sml:System/gml:boundedBy/gml:Envelope" />
+        <xsl:choose>
+          <xsl:when test="not($gmlEnvelope)">
+            <ctl:message>FAIL: gml:boundedBy/gml:Envelope not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($gmlEnvelope/@srsName)">
+            <ctl:message>FAIL: gml:boundedBy/gml:Envelope/@srsName not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$gmlEnvelope/@srsName = ''">
+            <ctl:message>FAIL: gml:boundedBy/gml:Envelope/@srsName is blank</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$gmlEnvelope/@srsName != 'http://www.opengis.net/def/crs/EPSG/0/4326'">
+            <ctl:message>FAIL: gml:boundedBy/gml:Envelope/@srsName != 'http://www.opengis.net/def/crs/EPSG/0/4326'</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.3">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document for a network of stations provides valid networkID identifier, and the networkID: (a) has definition as sml:Term/ @definition='http://mmisw.org/ont/ioos/definition/networkID'; (b) has a value as URN that conforms to the IOOS Conventions for Observing Asset Identifiers; and (c) matches the gml:name value in the sos:ObservationOffering for that network in the Capabilities document.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="smlIdentifier" select="$sensorMLDocument/sml:member/sml:System/sml:identification/sml:IdentifierList/sml:Identifier[@name='networkID']" />
+        <xsl:variable name="ioosNetworkAssetUrnRegex" select="'^urn:ioos:network:([A-Za-z0-9\._]+?){2,2}$'" /> 
+        <xsl:choose>
+          <xsl:when test="not($smlIdentifier)">
+            <ctl:message>FAIL: sml:Identifier[@name='networkID'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/networkID'])">
+            <ctl:message>FAIL: sml:Identifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/networkID'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term/sml:value)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(matches($smlIdentifier/sml:Term/sml:value, $ioosNetworkAssetUrnRegex))">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value is not a valid IOOS network urn</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <!-- TODO part c-->
+        </xsl:choose>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
 </ctl:package>
