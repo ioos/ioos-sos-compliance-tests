@@ -5,7 +5,8 @@ A set of CTL ([compliance test language](http://portal.opengeospatial.org/files/
 Still very much a work in progress. All GetCapabilities tests have been implemented. DescribeSensor and GetObservation still need a lot of work.
 
 See [list of covered tests](covered_tests.txt) for implementation converage.
-See [full test list](https://github.com/abirger/documentation-in-markdown/blob/master/testing/sos_test_list_github_notoc_summary.md) for the full list of IOOS SOS tests.
+
+See [full test list](https://github.com/ioos/sos-guidelines/blob/master/doc/testing/sos_test_list_github_notoc_summary.md) for the full list of IOOS SOS tests.
 
 ## Running
 
