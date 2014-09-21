@@ -193,6 +193,7 @@
         <ctl:with-param name="procedures" select="$describeSensorProcedures" />
         <ctl:with-param name="schema" select="$sensorMLSchema" />
         <ctl:with-param name="serviceUrl" select="$serviceUrl" />
+        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
       </ctl:call-test>
 
       <!-- GET: GetObservation -->
@@ -226,6 +227,7 @@
     <ctl:param name="procedures" />
     <ctl:param name="schema" />
     <ctl:param name="serviceUrl" />
+    <ctl:param name="capabilitiesDocument" />
 
     <ctl:assertion>SOS offers valid DescribeSensor via GET.</ctl:assertion>
     <ctl:code>
@@ -263,6 +265,7 @@
           <xsl:otherwise>
             <ctl:call-test name="describeSensor:allTests">
               <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+              <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
             </ctl:call-test>
           </xsl:otherwise>
         </xsl:choose>
