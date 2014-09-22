@@ -106,7 +106,7 @@
     <ctl:code>
       <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
         <xsl:variable name="smlIdentifier" select="$sensorMLDocument/sml:member/sml:System/sml:identification/sml:IdentifierList/sml:identifier[@name='networkID']" />
-        <xsl:variable name="ioosNetworkAssetUrnRegex" select="'^urn:ioos:network:([A-Za-z0-9\._]+?){2,2}$'" /> 
+        <xsl:variable name="ioosNetworkAssetUrnRegex" select="'^urn:ioos:network(:[A-Za-z0-9\._]+?){2,2}$'" />
         <xsl:choose>
           <xsl:when test="not($smlIdentifier)">
             <ctl:message>FAIL: sml:Identifier[@name='networkID'] not found</ctl:message>
@@ -128,11 +128,10 @@
             <ctl:message select="concat('FAIL: sml:Identifier/sml:Term/sml:value is not a valid IOOS network urn: ', $smlIdentifier/sml:Term/sml:value)" />
             <ctl:fail />
           </xsl:when>
-          <xsl:when test="not($capabilitiesDocument/sos:Capabilities/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering[gml:name = $smlIdentifier/sml:Term/sml:value])">
+          <xsl:when test="not($capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering[gml:name = $smlIdentifier/sml:Term/sml:value])">
             <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value does not exist as an sos:ObservationOffering in the Capabilites response</ctl:message>
             <ctl:fail />
           </xsl:when>
-          <!-- TODO part c-->
         </xsl:choose>
       </xsl:if>
     </ctl:code>
