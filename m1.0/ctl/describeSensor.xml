@@ -29,6 +29,12 @@
         <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.4">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -130,6 +136,68 @@
           </xsl:when>
           <xsl:when test="not($capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering[gml:name = $smlIdentifier/sml:Term/sml:value])">
             <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value does not exist as an sos:ObservationOffering in the Capabilites response</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.4">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document for a network of stations provides valid network shortName identifier, and the identifier has (a) definition as sml:Term /@definition='http://mmisw.org/ont/ioos/definition/shortName'; and (b) a text string value.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="smlIdentifier" select="$sensorMLDocument/sml:member/sml:System/sml:identification/sml:IdentifierList/sml:identifier[@name='shortName']" />
+        <xsl:choose>
+          <xsl:when test="not($smlIdentifier)">
+            <ctl:message>FAIL: sml:Identifier[@name='shortName'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/shortName'])">
+            <ctl:message>FAIL: sml:Identifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/shortName'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term/sml:value)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$smlIdentifier/sml:Term/sml:value = ''">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value is empty</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document for a network of stations provides valid network longName identifier, and the identifier has (a) definition as sml:Term/ @definition='http://mmisw.org/ont/ioos/definition/longName'; and (b) a text string value.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="smlIdentifier" select="$sensorMLDocument/sml:member/sml:System/sml:identification/sml:IdentifierList/sml:identifier[@name='longName']" />
+        <xsl:choose>
+          <xsl:when test="not($smlIdentifier)">
+            <ctl:message>FAIL: sml:Identifier[@name='longName'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/longName'])">
+            <ctl:message>FAIL: sml:Identifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/longName'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($smlIdentifier/sml:Term/sml:value)">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$smlIdentifier/sml:Term/sml:value = ''">
+            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value is empty</ctl:message>
             <ctl:fail />
           </xsl:when>
         </xsl:choose>
