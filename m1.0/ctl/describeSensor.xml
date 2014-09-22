@@ -35,6 +35,9 @@
       <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5">
         <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
       </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
     </ctl:code>
   </ctl:test>
 
@@ -181,23 +184,54 @@
         <xsl:variable name="smlIdentifier" select="$sensorMLDocument/sml:member/sml:System/sml:identification/sml:IdentifierList/sml:identifier[@name='longName']" />
         <xsl:choose>
           <xsl:when test="not($smlIdentifier)">
-            <ctl:message>FAIL: sml:Identifier[@name='longName'] not found</ctl:message>
+            <ctl:message>FAIL: sml:identifier[@name='longName'] not found</ctl:message>
             <ctl:fail />
           </xsl:when>
           <xsl:when test="not($smlIdentifier/sml:Term)">
-            <ctl:message>FAIL: sml:Identifier/sml:Term not found</ctl:message>
+            <ctl:message>FAIL: sml:identifier/sml:Term not found</ctl:message>
             <ctl:fail />
           </xsl:when>
           <xsl:when test="not($smlIdentifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/longName'])">
-            <ctl:message>FAIL: sml:Identifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/longName'] not found</ctl:message>
+            <ctl:message>FAIL: sml:identifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/longName'] not found</ctl:message>
             <ctl:fail />
           </xsl:when>
           <xsl:when test="not($smlIdentifier/sml:Term/sml:value)">
-            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value not found</ctl:message>
+            <ctl:message>FAIL: sml:identifier/sml:Term/sml:value not found</ctl:message>
             <ctl:fail />
           </xsl:when>
           <xsl:when test="$smlIdentifier/sml:Term/sml:value = ''">
-            <ctl:message>FAIL: sml:Identifier/sml:Term/sml:value is empty</ctl:message>
+            <ctl:message>FAIL: sml:identifier/sml:Term/sml:value is empty</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML response document provides for each network or station the reference to at least one parent network with IOOS codeSpace and RA Acronym value</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="matches($sensorMLDocument/sml:member/sml:System/gml:name, '^urn:ioos:(network|station).*$')">
+        <xsl:variable name="parentNetwork" select="$sensorMLDocument/sml:member/sml:System/sml:classification/sml:ClassifierList/sml:classifier[@name='parentNetwork']" />
+        <xsl:choose>
+          <xsl:when test="not($parentNetwork)">
+            <ctl:message>FAIL: sml:classifier[@name='parentNetwork'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($parentNetwork/sml:Term)">
+            <ctl:message>FAIL: sml:classifier/sml:Term not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($parentNetwork/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/parentNetwork'])">
+            <ctl:message>FAIL: sml:classifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/parentNetwork'] not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($parentNetwork/sml:Term/sml:value)">
+            <ctl:message>FAIL: sml:classifier/sml:Term/sml:value not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$parentNetwork/sml:Term/sml:value = ''">
+            <ctl:message>FAIL: sml:classifier/sml:Term/sml:value is empty</ctl:message>
             <ctl:fail />
           </xsl:when>
         </xsl:choose>
