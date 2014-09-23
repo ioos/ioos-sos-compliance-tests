@@ -12,6 +12,7 @@
   xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
   xmlns:swe="http://www.opengis.net/swe/1.0.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 
   <ctl:test name="describeSensor:allTests">
@@ -36,6 +37,9 @@
         <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
       </ctl:call-test>
       <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6">
+        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+      </ctl:call-test>
+      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.7">
         <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
       </ctl:call-test>
     </ctl:code>
@@ -232,6 +236,82 @@
           </xsl:when>
           <xsl:when test="$parentNetwork/sml:Term/sml:value = ''">
             <ctl:message>FAIL: sml:classifier/sml:Term/sml:value is empty</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.7">
+    <ctl:param name="sensorMLDocument" />
+    <ctl:assertion>SensorML document for a network of station provides valid values for all following elements: (a) sml:SensorML/sml:member[1]/sml:System[1]/sml:contact/sml:ContactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/operator']/sml:ResponsibleParty/sml:contactInfo/sml:address/sml:country; (b) sml:SensorML/sml:member[1]/sml:System[1]/sml:contact/sml:ContactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/publisher']/sml:ResponsibleParty/sml:contactInfo/sml:address/sml:country; (c) sml:SensorML/sml:member[1]/sml:System[1]/sml:contact/sml:ContactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/operator']/sml:ResponsibleParty/sml:contactInfo/sml:address/sml:electronicMailAddress; (d) sml:SensorML/sml:member[1]/sml:System[1]/sml:contact/sml:ContactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/publisher']/sml:ResponsibleParty/sml:contactInfo/sml:address/sml:electronicMailAddress</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="contactList" select="$sensorMLDocument/sml:member[1]/sml:System[1]/sml:contact/sml:ContactList" />
+        <xsl:variable name="operator" select="$contactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/operator']" />
+        <xsl:variable name="publisher" select="$contactList/sml:member[@xlink:role='http://mmisw.org/ont/ioos/definition/publisher']" />
+        <xsl:variable name="operatorAddress" select="$operator/sml:ResponsibleParty/sml:contactInfo/sml:address" />
+        <xsl:variable name="publisherAddress" select="$publisher/sml:ResponsibleParty/sml:contactInfo/sml:address" />
+        <xsl:variable name="emailRegex" select="'[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+(\.[A-Za-z0-9]+)+'" />
+        <xsl:choose>
+          <xsl:when test="not($contactList)">
+            <ctl:message>FAIL: sml:member[1]/sml:System[1]/sml:contact/sml:ContactList not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($operator)">
+            <ctl:message>FAIL: operator not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($publisher)">
+            <ctl:message>FAIL: publisher not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($operatorAddress)">
+            <ctl:message>FAIL: operator sml:ResponsibleParty/sml:contactInfo/sml:address not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($publisherAddress)">
+            <ctl:message>FAIL: publisher sml:ResponsibleParty/sml:contactInfo/sml:address not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($operatorAddress/sml:country)">
+            <ctl:message>FAIL: operator sml:address/sml:country not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$operatorAddress/sml:country = ''">
+            <ctl:message>FAIL: operator sml:address/sml:country is blank</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($publisherAddress/sml:country)">
+            <ctl:message>FAIL: publisher sml:address/sml:country not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$publisherAddress/sml:country = ''">
+            <ctl:message>FAIL: publisher sml:address/sml:country is blank</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($operatorAddress/sml:electronicMailAddress)">
+            <ctl:message>FAIL: operator sml:address/sml:electronicMailAddress not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$operatorAddress/sml:electronicMailAddress = ''">
+            <ctl:message>FAIL: operator sml:address/sml:electronicMailAddress is blank</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not($publisherAddress/sml:electronicMailAddress)">
+            <ctl:message>FAIL: publisher sml:address/sml:electronicMailAddress not found</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="$publisherAddress/sml:electronicMailAddress = ''">
+            <ctl:message>FAIL: publisher sml:address/sml:electronicMailAddress is blank</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(matches($operatorAddress/sml:electronicMailAddress, $emailRegex))">
+            <ctl:message>FAIL: operator sml:address/sml:electronicMailAddress is not a valid email address</ctl:message>
+            <ctl:fail />
+          </xsl:when>
+          <xsl:when test="not(matches($publisherAddress/sml:electronicMailAddress, $emailRegex))">
+            <ctl:message>FAIL: publisher sml:address/sml:electronicMailAddress is not a valid email address</ctl:message>
             <ctl:fail />
           </xsl:when>
         </xsl:choose>
