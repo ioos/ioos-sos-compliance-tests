@@ -8,4 +8,4 @@ CTLDIR=$DIR/../m1.0/ctl
 [[ -d "$CTLDIR" ]] || { echo "CTL directory $CTLDIR not found" >&2; exit 1; }
 [ -d "$DIR"/teamengine-* ] || { echo "teamengine not installed. Run install_teamengine.sh first" >&2; exit 1; }
 
-$DIR/teamengine-*/bin/unix/test.sh -source="$CTLDIR" @configFile="$CONFIGFILE"
+$DIR/teamengine-*/bin/unix/test.sh -source="$CTLDIR" @configFile="$CONFIGFILE" | GREP_COLOR='1;31' egrep --color 'FAIL|Failed|$'
