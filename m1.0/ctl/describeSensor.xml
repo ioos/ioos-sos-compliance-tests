@@ -3,33 +3,50 @@
   <ctl:test name="describeSensor:allTests">
     <ctl:param name="sensorMLDocument"/>
     <ctl:param name="capabilitiesDocument"/>
+    <ctl:param name="testPattern"/>
     <ctl:assertion>SensorML is valid.</ctl:assertion>
     <ctl:code>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.2">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.3">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.4">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.7">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.8">
-        <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
-      </ctl:call-test>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.2', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.2">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.3', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.3">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.4', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.4">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.5">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.6">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.7', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.7">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.8', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.8">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">

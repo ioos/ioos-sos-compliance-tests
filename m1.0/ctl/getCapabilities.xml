@@ -2,47 +2,74 @@
 <ctl:package xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="getCapabilities:allTests">
     <ctl:param name="capabilitiesDocument"/>
+    <ctl:param name="testPattern"/>
     <ctl:assertion>GetCapabilities response is valid.</ctl:assertion>
     <ctl:code>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidProcedure.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.2">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
-      <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidResponseMode.1">
-        <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
-      </ctl:call-test>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.2">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.3">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.4">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOutputFormat.2">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidSRSName.2">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidTimeFrame.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidProcedure.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidProcedure.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.2', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidObservedProperty.2">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidResponseMode.1', $testPattern)">
+        <ctl:call-test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidResponseMode.1">
+          <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <ctl:test name="getCapabilities:IOOS-SOS.GetCapabilities-ResponseContainsValidOperationsMetadataProperty.1">

@@ -12,4 +12,16 @@ See [full test list](https://github.com/ioos/sos-guidelines/blob/master/doc/test
 
 * Copy [bin/example-test-config.xml](bin/example-test-config.xml) and edit for your SOS deployment.
 * Run [bin/install_teamengine.sh](bin/install_teamengine.sh) (once) to install a local teamengine instance.
-* Run [bin/run_tests.sh](bin/run_tests.sh) with your test config XML file as the only argument to test your instance.
+* Run [bin/run_tests.sh](bin/run_tests.sh) with the path to your test config XML file as an argument to test your instance.
+
+```
+bin/run_tests.sh path/to/your-test-config.xml
+```
+
+* Optionally include a regex pattern as a second argument to only run matching tests
+
+```
+bin/run_tests.sh path/to/your-test-config.xml ResponseContainsValidOperationsMetadataProperty.8
+bin/run_tests.sh path/to/your-test-config.xml "describeSensor*"
+```
+

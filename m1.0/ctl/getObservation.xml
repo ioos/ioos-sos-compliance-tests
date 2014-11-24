@@ -4,12 +4,15 @@
     <ctl:param name="getObservationConstellation"/>
     <ctl:param name="observationCollectionDocument"/>
     <ctl:param name="capabilitiesDocument"/>
+    <ctl:param name="testPattern"/>
     <ctl:assertion>ObservationCollection is valid.</ctl:assertion>
     <ctl:code>
-      <ctl:call-test name="getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1">
-        <ctl:with-param name="getObservationConstellation" select="$getObservationConstellation"/>
-        <ctl:with-param name="observationCollectionDocument" select="$observationCollectionDocument"/>
-      </ctl:call-test>
+      <xsl:if test="matches('getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1', $testPattern)">
+        <ctl:call-test name="getObservation:IOOS-SOS.GetObservation-ResponseMatchingProcedureData.1">
+          <ctl:with-param name="getObservationConstellation" select="$getObservationConstellation"/>
+          <ctl:with-param name="observationCollectionDocument" select="$observationCollectionDocument"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <!-- TODO: getObservation:IOOS-SOS.GetObservation-ResponseMissingEventTimeData.1 -->
