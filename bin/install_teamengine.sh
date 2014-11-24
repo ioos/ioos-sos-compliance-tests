@@ -1,30 +1,40 @@
 #!/bin/bash
-command -v wget >/dev/null 2>&1 || { echo "wget command must be installed" >&2; exit 1; }
 command -v unzip >/dev/null 2>&1 || { echo "unzip command must be installed" >&2; exit 1; }
-command -v mvn >/dev/null 2>&1 || { echo "mvn command must be installed" >&2; exit 1; }
+command -v git >/dev/null 2>&1 || { echo "git must be installed" >&2; exit 1; }
+command -v mvn >/dev/null 2>&1 || { echo "mvn must be installed" >&2; exit 1; }
 
-VERSION=4.0.5
-TE_ZIP_PREFIX=tmp/teamengine-$VERSION/teamengine-console/target/teamengine-console-$VERSION
-TE_BIN_ZIP=$TE_ZIP_PREFIX-bin.zip
+DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+#GIT_REPO=git@github.com:opengeospatial/teamengine.git
+GIT_REPO=git@github.com:shane-axiom/teamengine.git
+TARGET=fix-inherited-failure
+TE_BIN_ZIP=tmp/teamengine/teamengine-console/target/teamengine-console-*-bin.zip
+cd $DIR
 
 rm -rf tmp
 mkdir -p tmp
 mkdir -p logs
-echo Downloading teamengine version $VERSION
-wget -q -O tmp/teamengine_$VERSION.zip https://github.com/opengeospatial/teamengine/archive/$VERSION.zip
-echo Extracting teamengine source
-unzip -q tmp/teamengine_$VERSION.zip -d tmp
+cd tmp
+echo Checking out git repository from $GIT_REPO
+git clone --quiet $GIT_REPO
+cd teamengine 
+
+echo Checking out $TARGET
+git checkout --quiet $TARGET
+if [[ $? -gt 0 ]]; then
+  echo Couldn\'t check out $TARGET.
+  exit 1
+fi
+
 echo Building teamengine
-cd tmp/teamengine-$VERSION
-mvn clean install > ../../logs/teamengine_${VERSION}_mvn_install.log 2>&1
-cd ../..
+mvn clean install > $DIR/logs/teamengine_${TARGET}_mvn_install.log 2>&1
+cd $DIR
 if [ ! -f $TE_BIN_ZIP ]; then
   echo "Build failed";
   exit 0;
 fi
 echo Installing teamengine
 rm -rf teamengine-*
-mkdir teamengine-$VERSION
-unzip -q -d teamengine-$VERSION $TE_BIN_ZIP
+mkdir teamengine-$TARGET
+unzip -q -d teamengine-$TARGET $TE_BIN_ZIP
 echo Installation complete, cleaning up
 rm -rf tmp
