@@ -47,6 +47,11 @@
           <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
         </ctl:call-test>
       </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.9', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.9">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
@@ -379,43 +384,107 @@
               <xsl:variable name="componentPosY" select="number(tokenize($componentPos/text(),' ')[2])"/>
               <xsl:choose>
                 <xsl:when test="not(sml:System)">
-                  <ctl:message select="concat('FAIL: component sml:System not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component sml:System not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not(sml:System/sml:location)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:location not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:location not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not(sml:System/sml:location/gml:Point)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentPos)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point/gml:pos not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point/gml:pos not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentPosX)">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos X coordinate not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentPosY)">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate not found for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="$componentPosX &lt; $boundedByMinX">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is less than gml:boundedBy min X for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is less than gml:boundedBy min X for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="$componentPosX &gt; $boundedByMaxX">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is greater than gml:boundedBy max X for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is greater than gml:boundedBy max X for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="$componentPosY &lt; $boundedByMinY">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is less than gml:boundedBy min Y for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is less than gml:boundedBy min Y for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="$componentPosY &gt; $boundedByMaxY">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is greater than gml:boundedBy max Y for component ', @name)" />
+                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is greater than gml:boundedBy max Y for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <!-- great -->
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.9">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:assertion>SensorML document for a network of stations provides a time range of observations for each network member station in sml:capabilities [@name="observationTimeRange"] element with a valid time value pair specifying a time range in ISO 8601 format.</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="iso8601DateRegex" select="'^[1-2]\d{3}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d(:[0-5]\d)?(\.\d{1,3})?(Z|\+[0-1]\d:00)?$'"/>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="componentList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:components/sml:ComponentList"/>
+        <xsl:choose>
+          <xsl:when test="not($componentList)">
+            <ctl:message>FAIL: sml:ComponentList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($componentList/sml:component)">
+            <ctl:message>FAIL: sml:ComponentList is empty</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$componentList/sml:component">
+              <xsl:variable name="timeRangeCapabilities" select="sml:System/sml:capabilities[@name='observationTimeRange']" />
+              <xsl:variable name="timeRangeDataRecord" select="$timeRangeCapabilities/swe:DataRecord" />
+              <xsl:variable name="timeRangeSweField" select="$timeRangeDataRecord/swe:field[@name='observationTimeRange']" />
+              <xsl:variable name="timeRangeSweTimeRange" select="$timeRangeSweField/swe:TimeRange[@definition='http://mmisw.org/ont/ioos/swe_element_type/observationTimeRange']" />
+              <xsl:variable name="timeRangeValue" select="$timeRangeSweTimeRange/swe:value" />
+              <xsl:variable name="timeRangeStart" select="tokenize($timeRangeValue/text(),' ')[1]"/>
+              <xsl:variable name="timeRangeEnd" select="tokenize($timeRangeValue/text(),' ')[2]"/>
+              <xsl:choose>
+                <xsl:when test="not($timeRangeCapabilities)">
+                  <ctl:message select="concat('FAIL: component sml:capabilities[@name=observationTimeRange] not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeDataRecord)">
+                  <ctl:message select="concat('FAIL: component sml:capabilities[@name=observationTimeRange]/swe:DataRecord not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeSweField)">
+                  <ctl:message select="concat('FAIL: component swe:field[@name=observationTimeRange] not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeSweTimeRange)">
+                  <ctl:message select="concat('FAIL: component swe:TimeRange[@definition=http://mmisw.org/ont/ioos/swe_element_type/observationTimeRange] not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeValue)">
+                  <ctl:message select="concat('FAIL: component time swe:value not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeStart[matches(., $iso8601DateRegex)])">
+                  <ctl:message select="concat('FAIL: component time swe:value start is not a valid ISO 8601 date for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($timeRangeEnd[matches(., $iso8601DateRegex)])">
+                  <ctl:message select="concat('FAIL: component time swe:value end is not a valid ISO 8601 date for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:otherwise>
