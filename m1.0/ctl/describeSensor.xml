@@ -52,6 +52,11 @@
           <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
         </ctl:call-test>
       </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
@@ -451,11 +456,11 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:for-each select="$componentList/sml:component">
-              <xsl:variable name="timeRangeCapabilities" select="sml:System/sml:capabilities[@name='observationTimeRange']" />
-              <xsl:variable name="timeRangeDataRecord" select="$timeRangeCapabilities/swe:DataRecord" />
-              <xsl:variable name="timeRangeSweField" select="$timeRangeDataRecord/swe:field[@name='observationTimeRange']" />
-              <xsl:variable name="timeRangeSweTimeRange" select="$timeRangeSweField/swe:TimeRange[@definition='http://mmisw.org/ont/ioos/swe_element_type/observationTimeRange']" />
-              <xsl:variable name="timeRangeValue" select="$timeRangeSweTimeRange/swe:value" />
+              <xsl:variable name="timeRangeCapabilities" select="sml:System/sml:capabilities[@name='observationTimeRange']"/>
+              <xsl:variable name="timeRangeDataRecord" select="$timeRangeCapabilities/swe:DataRecord"/>
+              <xsl:variable name="timeRangeSweField" select="$timeRangeDataRecord/swe:field[@name='observationTimeRange']"/>
+              <xsl:variable name="timeRangeSweTimeRange" select="$timeRangeSweField/swe:TimeRange[@definition='http://mmisw.org/ont/ioos/swe_element_type/observationTimeRange']"/>
+              <xsl:variable name="timeRangeValue" select="$timeRangeSweTimeRange/swe:value"/>
               <xsl:variable name="timeRangeStart" select="tokenize($timeRangeValue/text(),' ')[1]"/>
               <xsl:variable name="timeRangeEnd" select="tokenize($timeRangeValue/text(),' ')[2]"/>
               <xsl:choose>
@@ -489,6 +494,72 @@
                 </xsl:when>
                 <xsl:otherwise>
                   <!-- great -->
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:assertion>SensorML document for a network of stations provides definition of the observed properties for each network member station in sml:output [@name#"observed_Property"]/swe:Quantity [@definition="anyURI" elements, where anyURI is a reference to the IOOS vocabulary record.</ctl:assertion>
+    <ctl:code>
+      <xsl:variable name="urlRegex" select="'https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?'"/>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
+        <xsl:variable name="componentList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:components/sml:ComponentList"/>
+        <xsl:choose>
+          <xsl:when test="not($componentList)">
+            <ctl:message>FAIL: sml:ComponentList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($componentList/sml:component)">
+            <ctl:message>FAIL: sml:ComponentList is empty</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$componentList/sml:component">
+              <xsl:variable name="componentName" select="@name"/>
+              <xsl:variable name="smlOutputs" select="sml:System/sml:outputs"/>
+              <xsl:variable name="smlOutputList" select="$smlOutputs/sml:OutputList"/>
+              <xsl:choose>
+                <xsl:when test="not($smlOutputs)">
+                  <ctl:message select="concat('FAIL: component sml:outputs not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($smlOutputList)">
+                  <ctl:message select="concat('FAIL: component sml:OutputList not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($smlOutputList/sml:output)">
+                  <ctl:message select="concat('FAIL: component sml:OutputList has no sml:outputs component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:for-each select="$smlOutputList/sml:output">
+                    <xsl:choose>
+                      <xsl:when test="not(@name)">
+                        <ctl:message select="concat('FAIL: swe:Quantity has no name component ', $componentName)"/>
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="not(swe:Quantity)">
+                        <ctl:message select="concat('FAIL: swe:Quantity not found for sml:output ', @name, ' in component ', $componentName)"/>
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="not(swe:Quantity/@definition)">
+                        <ctl:message select="concat('FAIL: swe:Quantity definition not found for sml:output ', @name, ' in component ', $componentName)"/>
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="not(swe:Quantity/@definition[matches(., $urlRegex)])">
+                        <ctl:message select="concat('FAIL: swe:Quantity definition is not a valid URL for sml:output ', @name, ' in component ', $componentName)"/>
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:otherwise>
+                        <!-- pass -->
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:for-each>
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:for-each>
