@@ -31,7 +31,7 @@
     <ctl:param name="node" />
     <ctl:code>
       <xsl:choose>
-        <xsl:when test="not($node)">[MISSING]</xsl:when>
+        <xsl:when test="not($node)">[NONE]</xsl:when>
         <xsl:when test="count($node/*) > 0">[<xsl:for-each select="$node/*"><xsl:value-of select="ioosSosFn:toString(.)"/>,</xsl:for-each>]</xsl:when>
         <xsl:when test="not($node/text()) or normalize-space($node/text()) = ''">[EMPTY]</xsl:when>
         <xsl:otherwise><xsl:value-of select="normalize-space($node/text())" /></xsl:otherwise>
