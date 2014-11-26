@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ctl:package
+  xmlns:ctl="http://www.occamlab.com/ctl"
+  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+  <ctl:function name="ioosSosFn:getFullExceptionInfo">
+    <ctl:param name="exceptionReport">The exception report</ctl:param>
+    <ctl:return>The Exception Code, Locator, and Text of an exception report</ctl:return>
+    <ctl:code>
+      <xsl:variable name="exceptionElement" select="$exceptionReport//ows:ExceptionReport/ows:Exception" />
+      <xsl:variable name="exceptionCodeValue" select="$exceptionElement/@exceptionCode" />
+      <xsl:variable name="locatorValue" select="$exceptionElement/@locator" />
+      <xsl:variable name="textValue" select="$exceptionElement/ows:ExceptionText/text()" />
+      <xsl:value-of select="concat('Exception Report (exceptionCode, locator, text): ', ioosSosFn:toString($exceptionReport//ows:ExceptionReport/ows:Exception), ', ', $locatorValue, ', ', $textValue)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:getGetObservationConstellationInfo">
+    <ctl:param name="getObservationConstellation">The GetObservation constellation</ctl:param>
+    <ctl:return>String representation of the GetObservation constellation</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="concat('GetObservationConstellation (offering, procedures, observedProperties, startTime, endTime): ', ioosSosFn:toString($getObservationConstellation/offering), ', ', ioosSosFn:toString($getObservationConstellation/procedures), ', ', ioosSosFn:toString($getObservationConstellation/observedProperties), ', ', ioosSosFn:toString($getObservationConstellation/startTime), ', ', ioosSosFn:toString($getObservationConstellation/endTime))" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:toString">
+    <ctl:param name="node" />
+    <ctl:code>
+      <xsl:choose>
+        <xsl:when test="not($node)">[MISSING]</xsl:when>
+        <xsl:when test="count($node/*) > 0">[<xsl:for-each select="$node/*"><xsl:value-of select="ioosSosFn:toString(.)"/>,</xsl:for-each>]</xsl:when>
+        <xsl:when test="not($node/text()) or normalize-space($node/text()) = ''">[EMPTY]</xsl:when>
+        <xsl:otherwise><xsl:value-of select="normalize-space($node/text())" /></xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isFakeParameter">
+    <ctl:param name="parameter" />
+    <ctl:return>True/False depending on whether the input is a fake parameter</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="starts-with($parameter, 'http://mmisw.org/ont/fake/parameter/')" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidParameter">
+    <ctl:param name="parameter" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid CF or IOOS parameter</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="ioosSosFn:isValidCfParameter($parameter, $rootDir)=true() or ioosSosFn:isValidIoosParameter($parameter, $rootDir)=true()" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosParameterShort">
+    <ctl:param name="shortParameter" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS parameter (short)</ctl:return>
+    <ctl:code>
+      <xsl:variable name="fullParameter" select="concat('http://mmisw.org/ont/ioos/parameter/', $shortParameter)" />
+      <xsl:value-of select="ioosSosFn:isValidIoosParameter($fullParameter, $rootDir)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosParameter">
+    <ctl:param name="parameter" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS parameter</ctl:return>
+    <ctl:code>
+      <xsl:variable name="rdf" select="concat($rootDir, '/resources/rdf/ioos-parameter.rdf')" />
+      <xsl:value-of select="ioosSosFn:isValidRdfTerm($parameter, $rdf)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidCfParameterShort">
+    <ctl:param name="shortParameter" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid CF parameter (short)</ctl:return>
+    <ctl:code>
+      <xsl:variable name="fullParameter" select="concat('http://mmisw.org/ont/cf/parameter/', $shortParameter)" />
+      <xsl:value-of select="ioosSosFn:isValidCfParameter($fullParameter, $rootDir)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidCfParameter">
+    <ctl:param name="parameter" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid CF parameter</ctl:return>
+    <ctl:code>
+      <xsl:variable name="rdf" select="concat($rootDir, '/resources/rdf/cf-parameter.rdf')" />
+      <xsl:value-of select="ioosSosFn:isValidRdfTerm($parameter, $rdf)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosOrganization">
+    <ctl:param name="organization" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS organization</ctl:return>
+    <ctl:code>
+      <xsl:variable name="fullTerm" select="concat('http://mmisw.org/ont/ioos/organization/', $organization)" />
+      <xsl:variable name="rdf" select="concat($rootDir, '/resources/rdf/ioos-organization.rdf')" />
+      <xsl:value-of select="ioosSosFn:isValidRdfTerm($fullTerm, $rdf)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosPlatform">
+    <ctl:param name="platform" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS platform</ctl:return>
+    <ctl:code>
+      <xsl:variable name="fullTerm" select="concat('http://mmisw.org/ont/ioos/platform/', $platform)" />
+      <xsl:variable name="rdf" select="concat($rootDir, '/resources/rdf/ioos-platform.rdf')" />
+      <xsl:value-of select="ioosSosFn:isValidRdfTerm($fullTerm, $rdf)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosSector">
+    <ctl:param name="sector" />
+    <ctl:param name="rootDir" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS sector</ctl:return>
+    <ctl:code>
+      <xsl:variable name="fullTerm" select="concat('http://mmisw.org/ont/ioos/sector/', $sector)" />
+      <xsl:variable name="rdf" select="concat($rootDir, '/resources/rdf/ioos-sector.rdf')" />
+      <xsl:value-of select="ioosSosFn:isValidRdfTerm($fullTerm, $rdf)" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidRdfTerm">
+    <ctl:param name="term" />
+    <ctl:param name="rdf" />
+    <ctl:return>True/False depending on whether the input is a valid RDF term</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="exists(document($rdf)//*[@rdf:about=$term])" />
+    </ctl:code>
+  </ctl:function>
+
+</ctl:package>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ctl:package xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ctl:package xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor" xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="describeSensor:allTests">
     <ctl:param name="sensorMLDocument"/>
     <ctl:param name="capabilitiesDocument"/>
     <ctl:param name="testPattern"/>
+    <ctl:param name="rootDir"/>
     <ctl:assertion>SensorML is valid.</ctl:assertion>
     <ctl:code>
       <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1', $testPattern)">
@@ -55,6 +56,13 @@
       <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10', $testPattern)">
         <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10">
           <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="rootDir" select="$rootDir"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.11', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.11">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="rootDir" select="$rootDir"/>
         </ctl:call-test>
       </xsl:if>
     </ctl:code>
@@ -504,9 +512,10 @@
   </ctl:test>
   <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.10">
     <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
     <ctl:assertion>SensorML document for a network of stations provides definition of the observed properties for each network member station in sml:output [@name#"observed_Property"]/swe:Quantity [@definition="anyURI" elements, where anyURI is a reference to the IOOS vocabulary record.</ctl:assertion>
     <ctl:code>
-      <xsl:variable name="urlRegex" select="'https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?'"/>
+      <!--<xsl:variable name="urlRegex" select="'https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?'"/>-->
       <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:network')">
         <xsl:variable name="componentList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:components/sml:ComponentList"/>
         <xsl:choose>
@@ -551,9 +560,17 @@
                         <ctl:message select="concat('FAIL: swe:Quantity definition not found for sml:output ', @name, ' in component ', $componentName)"/>
                         <ctl:fail/>
                       </xsl:when>
-                      <xsl:when test="not(swe:Quantity/@definition[matches(., $urlRegex)])">
-                        <ctl:message select="concat('FAIL: swe:Quantity definition is not a valid URL for sml:output ', @name, ' in component ', $componentName)"/>
-                        <ctl:fail/>
+                      <xsl:when test="ioosSosFn:isValidParameter(swe:Quantity/@definition, $rootDir) = false()">
+                        <xsl:choose>
+                          <xsl:when test="ioosSosFn:isFakeParameter(swe:Quantity/@definition) = true()">
+                            <ctl:message select="concat('WARNING: swe:Quantity definition (', swe:Quantity/@definition, ') is not a fake parameter URL for sml:output ', @name, ' in component ', $componentName)"/>
+                            <ctl:warning/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <ctl:message select="concat('FAIL: swe:Quantity definition (', swe:Quantity/@definition, ') is not a valid parameter for sml:output ', @name, ' in component ', $componentName)"/>
+                            <ctl:fail/>
+                          </xsl:otherwise>
+                        </xsl:choose>
                       </xsl:when>
                       <xsl:otherwise>
                         <!-- pass -->
@@ -563,6 +580,49 @@
                 </xsl:otherwise>
               </xsl:choose>
             </xsl:for-each>
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.11">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
+    <ctl:assertion>SensorML document for a single station provides valid value of the sml:classifier [@name="platformType" element with the reference definition and IOOS codeSpace.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:station')">
+        <xsl:variable name="classifierList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:classification/sml:ClassifierList"/>
+        <xsl:variable name="platformTypeClassifier" select="$classifierList/sml:classifier[@name='platformType']"/>
+        <xsl:variable name="platformTypeTerm" select="$platformTypeClassifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/platformType']"/>
+        <xsl:variable name="platformTypeCodeSpace" select="$platformTypeTerm/sml:codeSpace[@xlink:href='http://mmisw.org/ont/ioos/platform']"/>
+        <xsl:variable name="platformTypeValue" select="$platformTypeTerm/sml:value"/>
+        <xsl:choose>
+          <xsl:when test="not($classifierList)">
+            <ctl:message>FAIL: sml:ClassifierList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($platformTypeClassifier)">
+            <ctl:message>FAIL: sml:classifier[name='platformType'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($platformTypeTerm)">
+            <ctl:message>FAIL: sml:Term[@definition='http://mmisw.org/ont/ioos/definition/platformType'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($platformTypeCodeSpace)">
+            <ctl:message>FAIL: sml:codeSpace[xlink:href='http://mmisw.org/ont/ioos/platform'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($platformTypeValue)">
+            <ctl:message>FAIL: platformType sml:value not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidIoosPlatform($platformTypeValue/text(), $rootDir) = false()">
+            <ctl:message select="concat('FAIL: platformType sml:value (', $platformTypeValue/text(), ') is not a valid IOOS platform type')" />
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- pass -->
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>

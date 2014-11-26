@@ -1,0 +1,160 @@
+<?xml version="1.0"?>
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns="http://mmisw.org/ont/ioos/organization/"
+    xmlns:owl="http://www.w3.org/2002/07/owl#"
+    xmlns:dc="http://purl.org/dc/elements/1.1/"
+    xmlns:omv="http://omv.ontoware.org/2005/05/ontology#"
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema#"
+    xmlns:omvmmi="http://mmisw.org/ont/mmi/20081020/ontologyMetadata/"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+    xml:base="http://mmisw.org/ont/ioos/organization">
+    <owl:Ontology rdf:about="">
+        <omv:uri>http://mmisw.org/ont/ioos/organization</omv:uri>
+        <omv:usedOntologyEngineeringTool rdf:resource="http://mmisw.org/ont/mmi/20081020/ontologyMetadata/voc2rdf"/>
+        <omvmmi:creditRequired>not specified</omvmmi:creditRequired>
+        <omv:acronym>organization</omv:acronym>
+        <omv:creationDate>2014-11-26T06:46:50+0000</omv:creationDate>
+        <omvmmi:hasResourceType>organization</omvmmi:hasResourceType>
+        <omv:description>IOOS Partner Organizations</omv:description>
+        <omv:version>20140812T214210</omv:version>
+        <omv:hasCreator>rob ragsdale</omv:hasCreator>
+        <omv:name>ioos_partner_organizations</omv:name>
+        <dc:description>IOOS Partner Organizations</dc:description>
+        <omvmmi:hasContentCreator>rob ragsdale</omvmmi:hasContentCreator>
+        <omvmmi:origMaintainerCode>ioos</omvmmi:origMaintainerCode>
+        <dc:creator>rob ragsdale</dc:creator>
+        <dc:date>2014-08-12T21:42:10+0000</dc:date>
+        <omvmmi:shortNameUri>http://mmisw.org/ont/mmi/resourcetype/organization</omvmmi:shortNameUri>
+    </owl:Ontology>
+    <owl:Class rdf:about="http://mmisw.org/ont/ioos/organization/Organization">
+        <rdfs:label>Organization</rdfs:label>
+    </owl:Class>
+    <owl:DatatypeProperty rdf:about="http://mmisw.org/ont/ioos/organization/name">
+        <rdfs:domain rdf:resource="http://mmisw.org/ont/ioos/organization/Organization"/>
+        <rdfs:label>name</rdfs:label>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://mmisw.org/ont/ioos/organization/description">
+        <rdfs:domain rdf:resource="http://mmisw.org/ont/ioos/organization/Organization"/>
+        <rdfs:label>description</rdfs:label>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://mmisw.org/ont/ioos/organization/acronym">
+        <rdfs:domain rdf:resource="http://mmisw.org/ont/ioos/organization/Organization"/>
+        <rdfs:label>acronym</rdfs:label>
+    </owl:DatatypeProperty>
+    <owl:DatatypeProperty rdf:about="http://mmisw.org/ont/ioos/organization/URL">
+        <rdfs:domain rdf:resource="http://mmisw.org/ont/ioos/organization/Organization"/>
+        <rdfs:label>URL</rdfs:label>
+    </owl:DatatypeProperty>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/NERACOOS">
+        <name>Northeastern Regional Association of Coastal Ocean Observing Systems</name>
+        <description>The Northeastern Regional Association of Coastal Ocean Observing Systems (NERACOOS) spans coastal waters from the Canadian Maritime Provinces to the New York Bight.</description>
+        <URL>http://www.neracoos.org/</URL>
+        <acronym>NERACOOS</acronym>
+        <rdfs:label>NERACOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/IOOS">
+        <name>US Integrated Ocean Observing System</name>
+        <description>The US Integrated Ocean Observing System (IOOS) is a national-regional partnership working to provide new tools and forecasts to improve safety, enhance the economy, and protect our environment.</description>
+        <URL>http://www.ioos.gov/</URL>
+        <acronym>IOOS</acronym>
+        <rdfs:label>IOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/GLOS">
+        <name>Great Lakes Observing System</name>
+        <description>The Great Lakes Observing System provides coverage for the coastal zone within the states of New York, Pennsylvania, Ohio, Indiana, Illinois, Wisconsin, Minnesota, and Michigan, bordering on the Great Lakes and St. Lawrence River.</description>
+        <URL>http://glos.us/</URL>
+        <acronym>GLOS</acronym>
+        <rdfs:label>GLOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/MARACOOS">
+        <name>Mid-Atlantic Regional Association Coastal Ocean Observing System</name>
+        <description>The Mid-Atlantic Regional Association Coastal Ocean Observing System (MARACOOS), extends 1,000 km alongshore from Cape Cod to Cape Hatteras.  It comprises ten states and the District of Columbia, five major urban ports and estuaries, and a wide continental shelf cut by multiple deep shelf-break canyons.</description>
+        <URL>http://www.maracoos.org/</URL>
+        <acronym>MARACOOS</acronym>
+        <rdfs:label>MARACOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/GCOOS">
+        <name>Gulf of Mexico Coastal Ocean Observing System</name>
+        <description>The Gulf of Mexico Coastal Ocean Observing System (GCOOS) includes the activities of the Gulf of Mexico Coastal Ocean Observing  System Regional Association (GCOOS-RA).  The GCOOS region covers the entire U.S. Gulf of Mexico, extending from the Florida Keys westward to the southern tip of Texas and encompassing over 17,000 miles of tidal shoreline in five U.S. states Louisiana, Texas, Mississippi, Alabama, and Florida. It includes the coastal zone that extends inland to the end of tidal effects in estuaries, bays, and rivers, and offshore to the boundaries of the U.S. Exclusive Economic Zone (EEZ) of the Gulf of Mexico.  GCOOS is often used as an abbreviation for GCOOS-RA.</description>
+        <URL>http://www.gcoos.org/</URL>
+        <acronym>GCOOS</acronym>
+        <rdfs:label>GCOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/NCBO">
+        <name>NOAA Chesapeake Bay Office</name>
+        <description>The National Oceanic and Atmospheric Administration's (NOAA) Chesapeake Bay Office is a division of the National Marine Fisheries' Office of Habitat Conservation, which works to protect and restore coastal and marine habitat at the national level.</description>
+        <URL>http://chesapeakebay.noaa.gov/</URL>
+        <acronym>NCBO</acronym>
+        <rdfs:label>NCBO</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/SCCOOS">
+        <name>Southern California Coastal Ocean Observing System</name>
+        <description>The Southern California Coastal Ocean Observing System (SCCOOS) provides coverage from Point Conception south to the Mexico border.</description>
+        <URL>http://www.sccoos.org/</URL>
+        <acronym>SCCOOS</acronym>
+        <rdfs:label>SCCOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/USACE">
+        <name>United States Army Corp of Engineers</name>
+        <URL>http://www.usace.army.mil/Home.aspx</URL>
+        <acronym>USACE</acronym>
+        <rdfs:label>USACE</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/CeNCOOS">
+        <name>Central and Northern California Ocean Observing System</name>
+        <description>The Central and Northern California Ocean Observing System (CeNCOOS) spans the coastal ocean from the California/Oregon border south to Point Conception.</description>
+        <URL>http://www.cencoos.org/</URL>
+        <acronym>CeNCOOS</acronym>
+        <rdfs:label>CeNCOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/NANOOS">
+        <name>Northwest Association of Networked Ocean Observing Systems</name>
+        <description>The Northwest Association of Networked Ocean Observing Systems (NANOOS) provides coverage for the Pacific Northwest (PNW), primarily Washington and Oregon.</description>
+        <URL>http://www.nanoos.org/</URL>
+        <acronym>NANOOS</acronym>
+        <rdfs:label>NANOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/AOOS">
+        <name>Alaska Ocean Observing System</name>
+        <description>The Alaska Ocean Observing System (AOOS) is the regional association for the statewide coastal and ocean observing system including the Gulf of Alaska, Bering Sea/Aleutian Islands, and Arctic Ocean/Chukchi and Beaufort Seas.</description>
+        <URL>http://www.aoos.org/</URL>
+        <acronym>AOOS</acronym>
+        <rdfs:label>AOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/NOAA_CO-OPS">
+        <name>Center for Operational Oceanographic Products and Services</name>
+        <description>The Center for Operational Oceanographic Products and Services (CO-OPS) gather oceanographic data to serve both the public and other government agencies.  CO-OPS is the authoritative source for accurate, reliable, and timely water-level and current measurements that support safe and efficient maritime commerce, sound coastal management, and recreation.</description>
+        <URL>http://tidesandcurrents.noaa.gov/index.shtml</URL>
+        <acronym>NOAA CO-OPS</acronym>
+        <rdfs:label>NOAA CO-OPS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/PacIOOS">
+        <name>Pacific Islands Ocean Observing System</name>
+        <description>The Pacific Islands (PacIOOS) region is defined as the State of Hawaii, the Commonwealth and Territories of the United States in the Pacific and the Freely Associated States in the Pacific.</description>
+        <URL>http://www.pacioos.org/</URL>
+        <acronym>PacIOOS</acronym>
+        <rdfs:label>PacIOOS</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/NOAA_NDBC">
+        <name>National Data Buoy Center</name>
+        <description>The National Oceanic and Atmospheric Administration (NOAA) National Data Buoy Center (NDBC), a part of the National Weather Service (NWS) designs, develops, operates, and maintains a network of data collecting buoys and coastal stations.</description>
+        <URL>http://www.ndbc.noaa.gov/</URL>
+        <acronym>NOAA NDBC</acronym>
+        <rdfs:label>NOAA NDBC</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/CaRA">
+        <name>Caribbean Regional Association</name>
+        <description>The Caribbean Regional Association (CaRA) is the regional association for coastal ocean observing for Puerto Rico and the U.S. Virgin Islands.</description>
+        <URL>http://cara.uprm.edu/</URL>
+        <acronym>CaRA</acronym>
+        <rdfs:label>CaRA</rdfs:label>
+    </Organization>
+    <Organization rdf:about="http://mmisw.org/ont/ioos/organization/SECOORA">
+        <name>Southeast Coastal Ocean Observing Regional Association</name>
+        <description>The region serviced by the Southeast Coastal Ocean Observing Regional Association (SECOORA) encompasses four states, over 42 million people and spans the coastal ocean from North Carolina to the west Coast of Florida.</description>
+        <URL>http://secoora.org/</URL>
+        <acronym>SECOORA</acronym>
+        <rdfs:label>SECOORA</rdfs:label>
+    </Organization>
+</rdf:RDF>

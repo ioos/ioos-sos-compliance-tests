@@ -3,6 +3,7 @@
   xmlns:sosFunctions="https://cite.opengeospatial.org/sos-1.0.0/src/ctl/functions.xml"
   xmlns:ctl="http://www.occamlab.com/ctl"
   xmlns:ioosSos="http://www.ioos.noaa.gov/sos"
+  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
   xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities"
   xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor"
   xmlns:getObservation="http://www.ioos.noaa.gov/sos/getObservation"
@@ -13,41 +14,10 @@
   xmlns:xml="http://www.w3.org/XML/1998/namespace"
   xmlns:ogc="http://www.opengis.net/ogc"
   xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-
-  <ctl:function name="ioosSos:getFullExceptionInfo">
-    <ctl:param name="exceptionReport">The exception report</ctl:param>
-    <ctl:return>The Exception Code, Locator, and Text of an exception report</ctl:return>
-    <ctl:code>
-      <xsl:variable name="exceptionElement" select="$exceptionReport//ows:ExceptionReport/ows:Exception" />
-      <xsl:variable name="exceptionCodeValue" select="$exceptionElement/@exceptionCode" />
-      <xsl:variable name="locatorValue" select="$exceptionElement/@locator" />
-      <xsl:variable name="textValue" select="$exceptionElement/ows:ExceptionText/text()" />
-      <xsl:value-of select="concat('Exception Report (exceptionCode, locator, text): ', ioosSos:toString($exceptionReport//ows:ExceptionReport/ows:Exception), ', ', $locatorValue, ', ', $textValue)" />
-    </ctl:code>
-  </ctl:function>
-
-  <ctl:function name="ioosSos:getGetObservationConstellationInfo">
-    <ctl:param name="getObservationConstellation">The GetObservation constellation</ctl:param>
-    <ctl:return>String representation of the GetObservation constellation</ctl:return>
-    <ctl:code>
-      <xsl:value-of select="concat('GetObservationConstellation (offering, procedures, observedProperties, startTime, endTime): ', ioosSos:toString($getObservationConstellation/offering), ', ', ioosSos:toString($getObservationConstellation/procedures), ', ', ioosSos:toString($getObservationConstellation/observedProperties), ', ', ioosSos:toString($getObservationConstellation/startTime), ', ', ioosSos:toString($getObservationConstellation/endTime))" />
-    </ctl:code>
-  </ctl:function>
-
-  <ctl:function name="ioosSos:toString">
-    <ctl:param name="node" />
-    <ctl:code>
-      <xsl:choose>
-        <xsl:when test="not($node)">[MISSING]</xsl:when>
-        <xsl:when test="count($node/*) > 0">[<xsl:for-each select="$node/*"><xsl:value-of select="ioosSos:toString(.)"/>,</xsl:for-each>]</xsl:when>
-        <xsl:when test="not($node/text()) or normalize-space($node/text()) = ''">[EMPTY]</xsl:when>          
-        <xsl:otherwise><xsl:value-of select="normalize-space($node/text())" /></xsl:otherwise>
-      </xsl:choose>
-    </ctl:code>
-  </ctl:function>
 
   <ctl:suite name="ioosSos:ioosSos">
     <ctl:title>IOOS SOS test suite</ctl:title>
@@ -57,6 +27,7 @@
 
   <ctl:test name="ioosSos:main">
     <ctl:param name="configFile" />
+    <ctl:param name="rootDir" />
     <ctl:param name="tests" />
     <ctl:assertion>Test IOOS SOS implementation</ctl:assertion>
     <ctl:code>
@@ -124,6 +95,7 @@
           <ctl:message select="concat('SOS service Url: ',$serviceUrl)"/>
           <ctl:call-test name="ioosSos:initiateTests">
             <ctl:with-param name="config" select="$config"/>
+            <ctl:with-param name="rootDir" select="$rootDir"/>
             <ctl:with-param name="testPattern" select="$testPattern"/>
             <ctl:with-param name="serviceUrl" select="$serviceUrl"/>
             <ctl:with-param name="schemaRoot" select="$schema.root"/>
@@ -140,6 +112,7 @@
 
   <ctl:test name="ioosSos:initiateTests">
     <ctl:param name="config" />
+    <ctl:param name="rootDir" />
     <ctl:param name="testPattern" />
     <ctl:param name="serviceUrl" />
     <ctl:param name="schemaRoot" />
@@ -168,7 +141,7 @@
         <ctl:message>GetCapabilites response document failed schema validation.</ctl:message>
         <ctl:message select="concat('Schema: ', $capabilitiesSchema)" />
         <xsl:if test="$capabilitiesDocument//*[local-name() = 'ExceptionReport']">
-          <ctl:message select="ioosSos:getFullExceptionInfo($capabilitiesDocument)" />
+          <ctl:message select="ioosSosFn:getFullExceptionInfo($capabilitiesDocument)" />
         </xsl:if>
         <ctl:fail/>
       </xsl:if>
@@ -194,6 +167,7 @@
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
         <ctl:with-param name="schema" select="$capabilitiesSchema" />
         <ctl:with-param name="testPattern" select="$testPattern" />
+        <ctl:with-param name="rootDir" select="$rootDir" />
       </ctl:call-test>
 
       <!-- GET: DescribeSensor -->
@@ -203,6 +177,7 @@
         <ctl:with-param name="serviceUrl" select="$serviceUrl" />
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
         <ctl:with-param name="testPattern" select="$testPattern" />
+        <ctl:with-param name="rootDir" select="$rootDir" />
       </ctl:call-test>
 
       <!-- GET: GetObservation -->
@@ -212,6 +187,7 @@
         <ctl:with-param name="serviceUrl" select="$serviceUrl" />
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
         <ctl:with-param name="testPattern" select="$testPattern" />
+        <ctl:with-param name="rootDir" select="$rootDir" />
       </ctl:call-test>
 
       <!-- POST: GetCapabilities -->
@@ -219,6 +195,7 @@
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
         <ctl:with-param name="schema" select="$capabilitiesSchema" />
         <ctl:with-param name="testPattern" select="$testPattern" />
+        <ctl:with-param name="rootDir" select="$rootDir" />
       </ctl:call-test>
     </ctl:code>
   </ctl:test>
@@ -227,12 +204,14 @@
     <ctl:param name="capabilitiesDocument" />
     <ctl:param name="schema" />
     <ctl:param name="testPattern" />
+    <ctl:param name="rootDir" />
     <ctl:assertion>SOS offers valid GetCapabilities via GET.</ctl:assertion>
     <ctl:code>
       <!-- special case: we already have the GetCapabilties from a GET request, use it directly -->
       <ctl:call-test name="getCapabilities:allTests">
         <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
         <ctl:with-param name="testPattern" select="$testPattern" />
+        <ctl:with-param name="rootDir" select="$rootDir" />
       </ctl:call-test>
     </ctl:code>
   </ctl:test>
@@ -243,6 +222,7 @@
     <ctl:param name="serviceUrl" />
     <ctl:param name="capabilitiesDocument" />
     <ctl:param name="testPattern" />
+    <ctl:param name="rootDir" />
 
     <ctl:assertion>SOS offers valid DescribeSensor via GET.</ctl:assertion>
     <ctl:code>
@@ -273,7 +253,7 @@
             <ctl:message>DescribeSensor response document failed schema validation.</ctl:message>
             <ctl:message select="concat('Schema: ', $schema)" />
             <xsl:if test="$sensorMLDocument//*[local-name() = 'ExceptionReport']">
-              <ctl:message select="ioosSos:getFullExceptionInfo($sensorMLDocument)" />
+              <ctl:message select="ioosSosFn:getFullExceptionInfo($sensorMLDocument)" />
             </xsl:if>
             <ctl:fail/>
           </xsl:when>
@@ -282,6 +262,7 @@
               <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
               <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
               <ctl:with-param name="testPattern" select="$testPattern"/>
+              <ctl:with-param name="rootDir" select="$rootDir" />
             </ctl:call-test>
           </xsl:otherwise>
         </xsl:choose>
@@ -295,12 +276,13 @@
     <ctl:param name="serviceUrl" />
     <ctl:param name="capabilitiesDocument" />
     <ctl:param name="testPattern" />
+    <ctl:param name="rootDir" />
 
     <ctl:assertion>SOS offers valid GetObservation via GET.</ctl:assertion>
     <ctl:code>
       <xsl:for-each select="$getObservation/getObservationConstellations/getObservationConstellation">
         <xsl:variable name="getObservationConstellation" select="." />
-        <ctl:message select="ioosSos:getGetObservationConstellationInfo($getObservationConstellation)" />
+        <ctl:message select="ioosSosFn:getGetObservationConstellationInfo($getObservationConstellation)" />
         <xsl:variable name="observationCollectionDocument">
           <ctl:request>
             <ctl:url>
@@ -340,7 +322,7 @@
             <ctl:message>ObservationCollection response document failed schema validation.</ctl:message>
             <ctl:message select="concat('Schema: ', $schema)" />
             <xsl:if test="$observationCollectionDocument//*[local-name() = 'ExceptionReport']">
-              <ctl:message select="ioosSos:getFullExceptionInfo($observationCollectionDocument)" />
+              <ctl:message select="ioosSosFn:getFullExceptionInfo($observationCollectionDocument)" />
             </xsl:if>
             <ctl:fail/>
           </xsl:when>
@@ -350,6 +332,7 @@
               <ctl:with-param name="observationCollectionDocument" select="$observationCollectionDocument"/>
               <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument"/>
               <ctl:with-param name="testPattern" select="$testPattern"/>
+              <ctl:with-param name="rootDir" select="$rootDir" />
             </ctl:call-test>
           </xsl:otherwise>
         </xsl:choose>
@@ -361,6 +344,7 @@
     <ctl:param name="capabilitiesDocument" />
     <ctl:param name="schema" />
     <ctl:param name="testPattern" />
+    <ctl:param name="rootDir" />
     <ctl:assertion>SOS offers valid GetCapabilities via POST.</ctl:assertion>
     <ctl:code>
       <xsl:variable name="postUrl" select="sosFunctions:operationPostURL($capabilitiesDocument, 'GetCapabilities')" />
@@ -395,6 +379,7 @@
           <ctl:call-test name="getCapabilities:allTests">
             <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
             <ctl:with-param name="testPattern" select="$testPattern" />
+            <ctl:with-param name="rootDir" select="$rootDir" />
           </ctl:call-test>
         </xsl:otherwise>
       </xsl:choose>
