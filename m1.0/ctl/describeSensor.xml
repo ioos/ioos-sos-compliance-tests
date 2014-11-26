@@ -65,6 +65,24 @@
           <ctl:with-param name="rootDir" select="$rootDir"/>
         </ctl:call-test>
       </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.12', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.12">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="rootDir" select="$rootDir"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.13', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.13">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="rootDir" select="$rootDir"/>
+        </ctl:call-test>
+      </xsl:if>
+      <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.14', $testPattern)">
+        <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.14">
+          <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+          <ctl:with-param name="rootDir" select="$rootDir"/>
+        </ctl:call-test>
+      </xsl:if>
     </ctl:code>
   </ctl:test>
   <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.1">
@@ -618,7 +636,136 @@
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidIoosPlatform($platformTypeValue/text(), $rootDir) = false()">
-            <ctl:message select="concat('FAIL: platformType sml:value (', $platformTypeValue/text(), ') is not a valid IOOS platform type')" />
+            <ctl:message select="concat('FAIL: platformType sml:value (', $platformTypeValue/text(), ') is not a valid IOOS platform type')"/>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- pass -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.12">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
+    <ctl:assertion>SensorML document for a single station provides valid value of the sml:classifier [@name="operatorSector" element with the reference definition and IOOS codeSpace.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:station')">
+        <xsl:variable name="classifierList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:classification/sml:ClassifierList"/>
+        <xsl:variable name="operatorSectorClassifier" select="$classifierList/sml:classifier[@name='operatorSector']"/>
+        <xsl:variable name="operatorSectorTerm" select="$operatorSectorClassifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/operatorSector']"/>
+        <xsl:variable name="operatorSectorCodeSpace" select="$operatorSectorTerm/sml:codeSpace[@xlink:href='http://mmisw.org/ont/ioos/sector']"/>
+        <xsl:variable name="operatorSectorValue" select="$operatorSectorTerm/sml:value"/>
+        <xsl:choose>
+          <xsl:when test="not($classifierList)">
+            <ctl:message>FAIL: sml:ClassifierList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($operatorSectorClassifier)">
+            <ctl:message>FAIL: sml:classifier[name='operatorSector'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($operatorSectorTerm)">
+            <ctl:message>FAIL: sml:Term[@definition='http://mmisw.org/ont/ioos/definition/operatorSector'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($operatorSectorCodeSpace)">
+            <ctl:message>FAIL: sml:codeSpace[xlink:href='http://mmisw.org/ont/ioos/sector'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($operatorSectorValue)">
+            <ctl:message>FAIL: operatorSector sml:value not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidIoosSector($operatorSectorValue/text(), $rootDir) = false()">
+            <ctl:message select="concat('FAIL: operatorSector sml:value (', $operatorSectorValue/text(), ') is not a valid IOOS sector')"/>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- pass -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.13">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
+    <ctl:assertion>SensorML document for a single station provides valid value of the sml:classifier [@name="publisher" element with the reference definition and IOOS codeSpace.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:station')">
+        <xsl:variable name="classifierList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:classification/sml:ClassifierList"/>
+        <xsl:variable name="publisherClassifier" select="$classifierList/sml:classifier[@name='publisher']"/>
+        <xsl:variable name="publisherTerm" select="$publisherClassifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/publisher']"/>
+        <xsl:variable name="publisherCodeSpace" select="$publisherTerm/sml:codeSpace[@xlink:href='http://mmisw.org/ont/ioos/organization']"/>
+        <xsl:variable name="publisherValue" select="$publisherTerm/sml:value"/>
+        <xsl:choose>
+          <xsl:when test="not($classifierList)">
+            <ctl:message>FAIL: sml:ClassifierList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($publisherClassifier)">
+            <ctl:message>FAIL: sml:classifier[name='publisher'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($publisherTerm)">
+            <ctl:message>FAIL: sml:Term[@definition='http://mmisw.org/ont/ioos/definition/publisher'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($publisherCodeSpace)">
+            <ctl:message>FAIL: sml:codeSpace[xlink:href='http://mmisw.org/ont/ioos/organization'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($publisherValue)">
+            <ctl:message>FAIL: publisher sml:value not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidIoosOrganization($publisherValue/text(), $rootDir) = false()">
+            <ctl:message select="concat('FAIL: publisher sml:value (', $publisherValue/text(), ') is not a valid IOOS organization')"/>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- pass -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.14">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
+    <ctl:assertion>SensorML document for a single station provides valid value of the sml:classifier [@name="sponsor" element with the reference definition and IOOS codeSpace.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="starts-with($sensorMLDocument/sml:member/sml:System/gml:name, 'urn:ioos:station')">
+        <xsl:variable name="classifierList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:classification/sml:ClassifierList"/>
+        <xsl:variable name="sponsorClassifier" select="$classifierList/sml:classifier[@name='sponsor']"/>
+        <xsl:variable name="sponsorTerm" select="$sponsorClassifier/sml:Term[@definition='http://mmisw.org/ont/ioos/definition/sponsor']"/>
+        <xsl:variable name="sponsorCodeSpace" select="$sponsorTerm/sml:codeSpace[@xlink:href='http://mmisw.org/ont/ioos/organization']"/>
+        <xsl:variable name="sponsorValue" select="$sponsorTerm/sml:value"/>
+        <xsl:choose>
+          <xsl:when test="not($classifierList)">
+            <ctl:message>FAIL: sml:ClassifierList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($sponsorClassifier)">
+            <ctl:message>FAIL: sml:classifier[name='sponsor'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($sponsorTerm)">
+            <ctl:message>FAIL: sml:Term[@definition='http://mmisw.org/ont/ioos/definition/sponsor'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($sponsorCodeSpace)">
+            <ctl:message>FAIL: sml:codeSpace[xlink:href='http://mmisw.org/ont/ioos/organization'] not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($sponsorValue)">
+            <ctl:message>FAIL: sponsor sml:value not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidIoosOrganization($sponsorValue/text(), $rootDir) = false()">
+            <ctl:message select="concat('FAIL: sponsor sml:value (', $sponsorValue/text(), ') is not a valid IOOS organization')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:otherwise>
