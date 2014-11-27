@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ctl:package xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities" xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ctl:package
+  xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities"
+  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
+  xmlns:ctl="http://www.occamlab.com/ctl"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ows="http://www.opengis.net/ows/1.1"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:sos="http://www.opengis.net/sos/1.0"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="getCapabilities:allTests">
     <ctl:param name="capabilitiesDocument"/>
     <ctl:param name="testPattern"/>
@@ -245,7 +257,6 @@
     <ctl:param name="capabilitiesDocument"/>
     <ctl:assertion>Each sos:ObservationOffering provides beginPosition and endPosition values of TimePeriod, and (a) beginPosition value is not later than endPosition; (b) beginPosition value is in ISO 8601 format (e.g. 2009-05-23T00:00:00.000Z), and (c) endPosition has either an inline value in ISO 8601 format or an attribute "indeterminatePosition#"now"".</ctl:assertion>
     <ctl:code>
-      <xsl:variable name="iso8601DateRegex" select="'^[1-2]\d{3}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d(:[0-5]\d)?(\.\d{1,3})?(Z|\+[0-1]\d:00)?$'"/>
       <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
         <xsl:choose>
           <xsl:when test="not(sos:time)">
@@ -276,7 +287,7 @@
             <ctl:message select="concat('FAIL: gml:beingPosition is after gml:endPosition in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not(sos:time/gml:TimePeriod/gml:beginPosition[matches(., $iso8601DateRegex)])">
+          <xsl:when test="ioosSosFn:isValidIso8601Time(sos:time/gml:TimePeriod/gml:beginPosition) = false()">
             <ctl:message select="concat('FAIL: gml:beginPosition is not a valid ISO 8601 date in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
@@ -284,7 +295,7 @@
             <ctl:message select="concat('FAIL: gml:endPosition does not have ISO 8601 date or indeterminate position in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition and not(sos:time/gml:TimePeriod/gml:endPosition[matches(., $iso8601DateRegex)])">
+          <xsl:when test="sos:time/gml:TimePeriod/gml:endPosition and ioosSosFn:isValidIso8601Time(sos:time/gml:TimePeriod/gml:endPosition) = false()">
             <ctl:message select="concat('FAIL: gml:endPosition is not a valid ISO 8601 date in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
@@ -300,7 +311,6 @@
     <ctl:param name="capabilitiesDocument"/>
     <ctl:assertion>Each ObservationOffering provides just a single procedure, and the procedure value is (a) a URN that conforms to the IOOS Conventions for Observing Asset Identifiers, and (b) matches the gml:name value for this ObservationOffering.</ctl:assertion>
     <ctl:code>
-      <xsl:variable name="ioosAssetUrnRegex" select="'^urn:ioos:(network|station|sensor)(:[A-Za-z0-9\._]+?){2,3}$'"/>
       <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
         <xsl:choose>
           <xsl:when test="not(sos:procedure)">
@@ -315,7 +325,7 @@
             <ctl:message select="concat('FAIL: No sos:procedure/xlink:href in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not(sos:procedure/@xlink:href[matches(., $ioosAssetUrnRegex)])">
+          <xsl:when test="ioosSosFn:isValidIoosAssetUrn(sos:procedure/@xlink:href) = false()">
             <ctl:message select="concat('FAIL: sos:procedure/@xlink:href is not a valid IOOS asset URN in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
@@ -337,7 +347,7 @@
     <ctl:assertion>Each ObservationOffering provides at least one fully qualified sos:observedProperty element with the values of URLs corresponding to a Climate and Forecast (CF) Standard Name of the record in one of the IOOS Vocabularies.</ctl:assertion>
     <ctl:code>
       <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
-        <xsl:variable name="offeringGmlId" select="@gml:id" />
+        <xsl:variable name="offeringGmlId" select="@gml:id"/>
         <xsl:if test="not(sos:observedProperty)">
           <ctl:message select="concat('FAIL: No sos:observedProperty in ObservationOffering ', @gml:id)"/>
           <ctl:fail/>

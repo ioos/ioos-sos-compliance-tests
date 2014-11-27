@@ -4,6 +4,8 @@
   xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
+  xmlns:gml="http://www.opengis.net/gml"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -138,4 +140,81 @@
     </ctl:code>
   </ctl:function>
 
+  <ctl:function name="ioosSosFn:isValidIso8601Time">
+    <ctl:param name="time" />
+    <ctl:return>True/False depending on whether the input is a valid ISO8601 time</ctl:return>
+    <ctl:code>
+      <xsl:variable name="iso8601DateRegex" select="'^[1-2]\d{3}-[0-1]\d-[0-3]\dT[0-2]\d:[0-5]\d(:[0-5]\d)?(\.\d{1,3})?(Z|\+[0-1]\d:00)?$'"/>
+      <xsl:value-of select="exists($time[matches(., $iso8601DateRegex)])" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidUrl">
+    <ctl:param name="url" />
+    <ctl:return>True/False depending on whether the input is a valid URL</ctl:return>
+    <ctl:code>
+      <xsl:variable name="urlRegex" select="'https?://([-\w\.]+)+(:\d+)?(/([\w/_\.]*(\?\S+)?)?)?'"/>
+      <xsl:value-of select="exists($url[matches(., $urlRegex)])" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidIoosAssetUrn">
+    <ctl:param name="asset" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS asset URN</ctl:return>
+    <ctl:code>
+      <xsl:variable name="ioosAssetUrnRegex" select="'^urn:ioos:(network|station|sensor)(:[A-Za-z0-9\._]+?){2,3}$'"/>
+      <xsl:value-of select="exists($asset[matches(., $ioosAssetUrnRegex)])" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isNetworkAsset">
+    <ctl:param name="sml" />
+    <ctl:return>True/False depending on whether the input is SensorML for an IOOS network</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="starts-with($sml/sml:member[1]/sml:System/gml:name, 'urn:ioos:network')" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isStationAsset">
+    <ctl:param name="sml" />
+    <ctl:return>True/False depending on whether the input is SensorML for an IOOS station</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="starts-with($sml/sml:member[1]/sml:System/gml:name, 'urn:ioos:station')" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isSensorAsset">
+    <ctl:param name="sml" />
+    <ctl:return>True/False depending on whether the input is SensorML for an IOOS sensor</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="starts-with($sml/sml:member[1]/sml:System/gml:name, 'urn:ioos:sensor')" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidNetworkUrn">
+    <ctl:param name="urn" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS network asset URN</ctl:return>
+    <ctl:code>
+      <xsl:variable name="ioosNetworkUrnRegex" select="'^urn:ioos:network(:[A-Za-z0-9\._]+){2,2}$'"/>
+      <xsl:value-of select="exists($urn[matches(., $ioosNetworkUrnRegex)])" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidStationUrn">
+    <ctl:param name="urn" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS station asset URN</ctl:return>
+    <ctl:code>
+      <xsl:variable name="ioosStationUrnRegex" select="'^urn:ioos:station(:[A-Za-z0-9\._]+){2,2}$'"/>
+      <xsl:value-of select="exists($urn[matches(., $ioosStationUrnRegex)])" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidSensorUrn">
+    <ctl:param name="urn" />
+    <ctl:return>True/False depending on whether the input is a valid IOOS sensor asset URN</ctl:return>
+    <ctl:code>
+      <xsl:variable name="ioosSensorUrnRegex" select="'^urn:ioos:sensor(:[A-Za-z0-9\._]+){3,3}$'"/>
+      <xsl:value-of select="exists($urn[matches(., $ioosSensorUrnRegex)])" />
+    </ctl:code>
+  </ctl:function>
 </ctl:package>
