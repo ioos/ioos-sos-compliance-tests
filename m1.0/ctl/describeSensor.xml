@@ -1,19 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ctl:package
-  xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor"
-  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
-  xmlns:ctl="http://www.occamlab.com/ctl"
-  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
-  xmlns:ows="http://www.opengis.net/ows/1.1"
-  xmlns:gml="http://www.opengis.net/gml"
-  xmlns:sos="http://www.opengis.net/sos/1.0"
-  xmlns:ogc="http://www.opengis.net/ogc"
-  xmlns:om="http://www.opengis.net/om/1.0"
-  xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
-  xmlns:swe="http://www.opengis.net/swe/1.0.1"
-  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-  xmlns:xlink="http://www.w3.org/1999/xlink"
-  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ctl:package xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor" xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="describeSensor:allTests">
     <ctl:param name="sensorMLDocument"/>
     <ctl:param name="capabilitiesDocument"/>
@@ -106,6 +92,12 @@
         </xsl:if>
         <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.15', $testPattern)">
           <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.15">
+            <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+            <ctl:with-param name="rootDir" select="$rootDir"/>
+          </ctl:call-test>
+        </xsl:if>
+        <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.16', $testPattern)">
+          <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.16">
             <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
             <ctl:with-param name="rootDir" select="$rootDir"/>
           </ctl:call-test>
@@ -394,10 +386,10 @@
         <xsl:variable name="boundedBy" select="$sensorMLDocument/sml:member[1]/sml:System[1]/gml:boundedBy"/>
         <xsl:variable name="boundedByLowerCorner" select="$boundedBy/gml:Envelope/gml:lowerCorner"/>
         <xsl:variable name="boundedByUpperCorner" select="$boundedBy/gml:Envelope/gml:upperCorner"/>
-        <xsl:variable name="boundedByMinX" select="number(tokenize($boundedByLowerCorner/text(),' ')[1])"/>
-        <xsl:variable name="boundedByMinY" select="number(tokenize($boundedByLowerCorner/text(),' ')[2])"/>
-        <xsl:variable name="boundedByMaxX" select="number(tokenize($boundedByUpperCorner/text(),' ')[1])"/>
-        <xsl:variable name="boundedByMaxY" select="number(tokenize($boundedByUpperCorner/text(),' ')[2])"/>
+        <xsl:variable name="boundedByMinLat" select="number(tokenize($boundedByLowerCorner/text(),' ')[1])"/>
+        <xsl:variable name="boundedByMinLng" select="number(tokenize($boundedByLowerCorner/text(),' ')[2])"/>
+        <xsl:variable name="boundedByMaxLat" select="number(tokenize($boundedByUpperCorner/text(),' ')[1])"/>
+        <xsl:variable name="boundedByMaxLng" select="number(tokenize($boundedByUpperCorner/text(),' ')[2])"/>
         <xsl:variable name="componentList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:components/sml:ComponentList"/>
         <xsl:choose>
           <xsl:when test="not($boundedBy)">
@@ -412,20 +404,36 @@
             <ctl:message>FAIL: gml:boundedByUpperCorner not found</ctl:message>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not($boundedByMinX)">
-            <ctl:message>FAIL: gml:boundedByMinX not found</ctl:message>
+          <xsl:when test="not($boundedByMinLat)">
+            <ctl:message>FAIL: gml:boundedByMinLat not found</ctl:message>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not($boundedByMinY)">
-            <ctl:message>FAIL: gml:boundedByMinY not found</ctl:message>
+          <xsl:when test="not($boundedByMinLng)">
+            <ctl:message>FAIL: gml:boundedByMinLng not found</ctl:message>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not($boundedByMaxX)">
-            <ctl:message>FAIL: gml:boundedByMaxX not found</ctl:message>
+          <xsl:when test="not($boundedByMaxLat)">
+            <ctl:message>FAIL: gml:boundedByMaxLat not found</ctl:message>
             <ctl:fail/>
           </xsl:when>
-          <xsl:when test="not($boundedByMaxY)">
-            <ctl:message>FAIL: gml:boundedByMaxY not found</ctl:message>
+          <xsl:when test="not($boundedByMaxLng)">
+            <ctl:message>FAIL: gml:boundedByMaxLng not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLatitude($boundedByMinLat) = false()">
+            <ctl:message select="concat('FAIL: gml:boundedByMinLat (', $boundedByMinLat, ') is not a valid latitude')" />
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLongitude($boundedByMinLng) = false()">
+            <ctl:message select="concat('FAIL: gml:boundedByMinLng (', $boundedByMinLng, ') is not a valid longitude')" />
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLatitude($boundedByMaxLat) = false()">
+            <ctl:message select="concat('FAIL: gml:boundedByMaxLat (', $boundedByMaxLat, ') is not a valid latitude')" />
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLongitude($boundedByMaxLng) = false()">
+            <ctl:message select="concat('FAIL: gml:boundedByMaxLng (', $boundedByMaxLng, ') is not a valid longitude')" />
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="not($componentList)">
@@ -439,8 +447,8 @@
           <xsl:otherwise>
             <xsl:for-each select="$componentList/sml:component">
               <xsl:variable name="componentPos" select="sml:System/sml:location/gml:Point/gml:pos"/>
-              <xsl:variable name="componentPosX" select="number(tokenize($componentPos/text(),' ')[1])"/>
-              <xsl:variable name="componentPosY" select="number(tokenize($componentPos/text(),' ')[2])"/>
+              <xsl:variable name="componentPosLat" select="number(tokenize($componentPos/text(),' ')[1])"/>
+              <xsl:variable name="componentPosLng" select="number(tokenize($componentPos/text(),' ')[2])"/>
               <xsl:choose>
                 <xsl:when test="not(sml:System)">
                   <ctl:message select="concat('FAIL: component sml:System not found for component ', @name)"/>
@@ -458,28 +466,36 @@
                   <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point/gml:pos not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="not($componentPosX)">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate not found for component ', @name)"/>
+                <xsl:when test="not($componentPosLat)">
+                  <ctl:message select="concat('FAIL: component gml:pos latitude coordinate not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="not($componentPosY)">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate not found for component ', @name)"/>
+                <xsl:when test="not($componentPosLng)">
+                  <ctl:message select="concat('FAIL: component gml:pos longitude coordinate not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="$componentPosX &lt; $boundedByMinX">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is less than gml:boundedBy min X for component ', @name)"/>
+                <xsl:when test="ioosSosFn:isValidLatitude($componentPosLat) = false()">
+                  <ctl:message select="concat('FAIL: gml:pos latitude (', $componentPosLat, ') is not a valid latitude for component ', @name)" />
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="$componentPosX &gt; $boundedByMaxX">
-                  <ctl:message select="concat('FAIL: component gml:pos X coordinate is greater than gml:boundedBy max X for component ', @name)"/>
+                <xsl:when test="ioosSosFn:isValidLongitude($componentPosLng) = false()">
+                  <ctl:message select="concat('FAIL: gml:pos longitude (', $componentPosLng, ') is not a valid longitude for component ', @name)" />
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="$componentPosY &lt; $boundedByMinY">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is less than gml:boundedBy min Y for component ', @name)"/>
+                <xsl:when test="$componentPosLat &lt; $boundedByMinLat">
+                  <ctl:message select="concat('FAIL: component gml:pos latitude is less than gml:boundedBy min latitude for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="$componentPosY &gt; $boundedByMaxY">
-                  <ctl:message select="concat('FAIL: component gml:pos Y coordinate is greater than gml:boundedBy max Y for component ', @name)"/>
+                <xsl:when test="$componentPosLat &gt; $boundedByMaxLat">
+                  <ctl:message select="concat('FAIL: component gml:pos latitude is greater than gml:boundedBy max latitude for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="$componentPosLng &lt; $boundedByMinLng">
+                  <ctl:message select="concat('FAIL: component gml:pos longitude coordinate is less than gml:boundedBy min longitude for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="$componentPosLng &gt; $boundedByMaxLng">
+                  <ctl:message select="concat('FAIL: component gml:pos longitude coordinate is greater than gml:boundedBy max longitude for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -840,6 +856,57 @@
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidIso8601Time($timeRangeEnd) = false()">
             <ctl:message select="concat('FAIL: time swe:value end (', $timeRangeEnd, ') is not a valid ISO 8601 date')"/>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <!-- great -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.16">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:assertion>SensorML document for a single station provides a location of the station in sml:location/gml:Point [@srsName="http://www.opengis.net/def/crs/EPSG/0/4326" element with the valid latitude and longitude value pair.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="ioosSosFn:isStationAsset($sensorMLDocument) = true()">
+        <xsl:variable name="smlSystem" select="$sensorMLDocument/sml:member[1]/sml:System"/>
+        <xsl:variable name="smlLocation" select="$smlSystem/sml:location"/>
+        <xsl:variable name="gmlPoint" select="$smlLocation/gml:Point"/>
+        <xsl:variable name="gmlPos" select="$gmlPoint/gml:pos"/>
+        <xsl:variable name="gmlPosLat" select="number(tokenize($gmlPos/text(),' ')[1])"/>
+        <xsl:variable name="gmlPosLng" select="number(tokenize($gmlPos/text(),' ')[2])"/>
+        <xsl:choose>
+          <xsl:when test="not($smlSystem)">
+            <ctl:message>FAIL: sml:System not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($smlLocation)">
+            <ctl:message>FAIL: sml:System/sml:location not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($gmlPoint)">
+            <ctl:message>FAIL: sml:System/sml:location/gml:Point not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($gmlPos)">
+            <ctl:message>FAIL: sml:System/sml:location/gml:Point/gml:pos not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($gmlPosLat)">
+            <ctl:message>FAIL: gml:pos latitude coordinate not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($gmlPosLng)">
+            <ctl:message>FAIL: gml:pos longitude coordinate not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLatitude($gmlPosLat) = false()">
+            <ctl:message select="concat('FAIL: gml:pos latitude (', $gmlPosLat, ') is invalid')"/>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="ioosSosFn:isValidLongitude($gmlPosLng) = false()">
+            <ctl:message select="concat('FAIL: gml:pos longitude (', $gmlPosLng, ') is invalid')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:otherwise>

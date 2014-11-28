@@ -217,4 +217,20 @@
       <xsl:value-of select="exists($urn[matches(., $ioosSensorUrnRegex)])" />
     </ctl:code>
   </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidLatitude">
+    <ctl:param name="lat" />
+    <ctl:return>True/False depending on whether the input is a valid latitude</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="$lat >= -180.0 and $lat &lt;= 180.0" />
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:isValidLongitude">
+    <ctl:param name="lng" />
+    <ctl:return>True/False depending on whether the input is a valid longitude</ctl:return>
+    <ctl:code>
+      <xsl:value-of select="$lng >= -90.0 and $lng &lt;= 90.0" />
+    </ctl:code>
+  </ctl:function>
 </ctl:package>
