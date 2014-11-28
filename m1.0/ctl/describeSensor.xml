@@ -446,20 +446,27 @@
           </xsl:when>
           <xsl:otherwise>
             <xsl:for-each select="$componentList/sml:component">
-              <xsl:variable name="componentPos" select="sml:System/sml:location/gml:Point/gml:pos"/>
+              <xsl:variable name="componentSystem" select="sml:System"/>
+              <xsl:variable name="componentLocation" select="$componentSystem/sml:location"/>
+              <xsl:variable name="componentPoint" select="$componentLocation/gml:Point"/>
+              <xsl:variable name="componentPos" select="$componentPoint/gml:pos"/>
               <xsl:variable name="componentPosLat" select="number(tokenize($componentPos/text(),' ')[1])"/>
               <xsl:variable name="componentPosLng" select="number(tokenize($componentPos/text(),' ')[2])"/>
               <xsl:choose>
-                <xsl:when test="not(sml:System)">
+                <xsl:when test="not($componentSystem)">
                   <ctl:message select="concat('FAIL: component sml:System not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="not(sml:System/sml:location)">
+                <xsl:when test="not($componentLocation)">
                   <ctl:message select="concat('FAIL: component sml:System/sml:location not found for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
-                <xsl:when test="not(sml:System/sml:location/gml:Point)">
+                <xsl:when test="not($componentPoint)">
                   <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point not found for component ', @name)"/>
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="$componentPoint/@srsName != 'http://www.opengis.net/def/crs/EPSG/0/4326'">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:location/gml:Point/@srsName != http://www.opengis.net/def/crs/EPSG/0/4326 for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentPos)">
@@ -887,6 +894,10 @@
           </xsl:when>
           <xsl:when test="not($gmlPoint)">
             <ctl:message>FAIL: sml:System/sml:location/gml:Point not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="$gmlPoint/@srsName != 'http://www.opengis.net/def/crs/EPSG/0/4326'">
+            <ctl:message>FAIL: sml:System/sml:location/gml:Point/@srsName != http://www.opengis.net/def/crs/EPSG/0/4326</ctl:message>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="not($gmlPos)">
