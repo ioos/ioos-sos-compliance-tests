@@ -102,6 +102,12 @@
             <ctl:with-param name="rootDir" select="$rootDir"/>
           </ctl:call-test>
         </xsl:if>
+        <xsl:if test="matches('describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.17', $testPattern)">
+          <ctl:call-test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.17">
+            <ctl:with-param name="sensorMLDocument" select="$sensorMLDocument"/>
+            <ctl:with-param name="rootDir" select="$rootDir"/>
+          </ctl:call-test>
+        </xsl:if>
       </xsl:if>
     </ctl:code>
   </ctl:test>
@@ -421,19 +427,19 @@
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidLatitude($boundedByMinLat) = false()">
-            <ctl:message select="concat('FAIL: gml:boundedByMinLat (', $boundedByMinLat, ') is not a valid latitude')" />
+            <ctl:message select="concat('FAIL: gml:boundedByMinLat (', $boundedByMinLat, ') is not a valid latitude')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidLongitude($boundedByMinLng) = false()">
-            <ctl:message select="concat('FAIL: gml:boundedByMinLng (', $boundedByMinLng, ') is not a valid longitude')" />
+            <ctl:message select="concat('FAIL: gml:boundedByMinLng (', $boundedByMinLng, ') is not a valid longitude')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidLatitude($boundedByMaxLat) = false()">
-            <ctl:message select="concat('FAIL: gml:boundedByMaxLat (', $boundedByMaxLat, ') is not a valid latitude')" />
+            <ctl:message select="concat('FAIL: gml:boundedByMaxLat (', $boundedByMaxLat, ') is not a valid latitude')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidLongitude($boundedByMaxLng) = false()">
-            <ctl:message select="concat('FAIL: gml:boundedByMaxLng (', $boundedByMaxLng, ') is not a valid longitude')" />
+            <ctl:message select="concat('FAIL: gml:boundedByMaxLng (', $boundedByMaxLng, ') is not a valid longitude')"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="not($componentList)">
@@ -482,11 +488,11 @@
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="ioosSosFn:isValidLatitude($componentPosLat) = false()">
-                  <ctl:message select="concat('FAIL: gml:pos latitude (', $componentPosLat, ') is not a valid latitude for component ', @name)" />
+                  <ctl:message select="concat('FAIL: gml:pos latitude (', $componentPosLat, ') is not a valid latitude for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="ioosSosFn:isValidLongitude($componentPosLng) = false()">
-                  <ctl:message select="concat('FAIL: gml:pos longitude (', $componentPosLng, ') is not a valid longitude for component ', @name)" />
+                  <ctl:message select="concat('FAIL: gml:pos longitude (', $componentPosLng, ') is not a valid longitude for component ', @name)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="$componentPosLat &lt; $boundedByMinLat">
@@ -630,7 +636,7 @@
                       <xsl:when test="ioosSosFn:isValidParameter(swe:Quantity/@definition, $rootDir) = false()">
                         <xsl:choose>
                           <xsl:when test="ioosSosFn:isFakeParameter(swe:Quantity/@definition) = true()">
-                            <ctl:message select="concat('WARNING: swe:Quantity definition (', swe:Quantity/@definition, ') is not a fake parameter URL for sml:output ', @name, ' in component ', $componentName)"/>
+                            <ctl:message select="concat('WARNING: swe:Quantity definition (', swe:Quantity/@definition, ') is a fake parameter URL for sml:output ', @name, ' in component ', $componentName)"/>
                             <ctl:warning/>
                           </xsl:when>
                           <xsl:otherwise>
@@ -922,6 +928,112 @@
           </xsl:when>
           <xsl:otherwise>
             <!-- great -->
+          </xsl:otherwise>
+        </xsl:choose>
+      </xsl:if>
+    </ctl:code>
+  </ctl:test>
+  <ctl:test name="describeSensor:IOOS-SOS.DescribeSensor-ResponseContainsValidOperationsMetadataProperty.17">
+    <ctl:param name="sensorMLDocument"/>
+    <ctl:param name="rootDir"/>
+    <ctl:assertion>SensorML document for a single station provides a description of at least one sensor that is located at the station (platform), and for each sensor a "sensorID" and a list of the properties observed by this sensor are provided.</ctl:assertion>
+    <ctl:code>
+      <xsl:if test="ioosSosFn:isStationAsset($sensorMLDocument) = true()">
+        <xsl:variable name="smlSystem" select="$sensorMLDocument/sml:member[1]/sml:System"/>
+        <xsl:variable name="smlComponents" select="$smlSystem/sml:components"/>
+        <xsl:variable name="smlComponentList" select="$smlComponents/sml:ComponentList"/>
+        <xsl:choose>
+          <xsl:when test="not($smlSystem)">
+            <ctl:message>FAIL: sml:System not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($smlComponents)">
+            <ctl:message>FAIL: sml:System/sml:components not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($smlComponentList)">
+            <ctl:message>FAIL: sml:System/sml:components/sml:ComponentList not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:when test="not($smlComponentList/sml:component)">
+            <ctl:message>FAIL: sml:System/sml:components/sml:ComponentList/sml:component not found</ctl:message>
+            <ctl:fail/>
+          </xsl:when>
+          <xsl:otherwise>
+            <xsl:for-each select="$smlComponentList/sml:component">
+              <xsl:variable name="componentName" select="@name"/>
+              <xsl:variable name="componentSmlSystem" select="sml:System"/>
+              <xsl:variable name="componentSmlIdentification" select="$componentSmlSystem/sml:identification"/>
+              <xsl:variable name="componentSmlIdentificationHref" select="$componentSmlSystem/sml:identification/@xlink:href"/>
+              <xsl:variable name="componentSmlOutputs" select="$componentSmlSystem/sml:outputs"/>
+              <xsl:variable name="componentSmlOutputList" select="$componentSmlOutputs/sml:OutputList"/>
+              <xsl:choose>
+                <xsl:when test="not($componentSmlSystem)">
+                  <ctl:message select="concat('FAIL: component sml:System not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($componentSmlIdentification)">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($componentSmlIdentificationHref)">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="ioosSosFn:isValidSensorUrn($componentSmlIdentificationHref) = false()">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href (', $componentSmlIdentificationHref, ') is not a valid IOOS sensor URN for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($componentSmlOutputs)">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($componentSmlOutputList)">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:when test="not($componentSmlOutputList/sml:output)">
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList/sml:output not found for ', $componentName)" />
+                  <ctl:fail/>
+                </xsl:when>
+                <xsl:otherwise>
+                  <xsl:for-each select="$componentSmlOutputList/sml:output">
+                    <xsl:variable name="outputName" select="@name"/>
+                    <xsl:variable name="outputSweQuantity" select="swe:Quantity"/>
+                    <xsl:variable name="outputSweQuantityDefinition" select="$outputSweQuantity/@definition"/>
+                    <xsl:choose>
+                      <xsl:when test="not($outputName)">
+                        <ctl:message select="concat('FAIL: output @name not found in ', $componentName)" />
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="not($outputSweQuantity)">
+                        <ctl:message select="concat('FAIL: output swe:Quantity not found for output ', $outputName, ' in component ', $componentName)" />
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="not($outputSweQuantityDefinition)">
+                        <ctl:message select="concat('FAIL: output swe:Quantity/@definition not found for output ', $outputName, ' in component ', $componentName)" />
+                        <ctl:fail/>
+                      </xsl:when>
+                      <xsl:when test="ioosSosFn:isValidParameter($outputSweQuantityDefinition, $rootDir) = false()">
+                        <xsl:choose>
+                          <xsl:when test="ioosSosFn:isFakeParameter($outputSweQuantityDefinition) = true()">
+                            <ctl:message select="concat('WARNING: swe:Quantity definition (', $outputSweQuantityDefinition, ') is a fake parameter URL for sml:output ', $outputName, ' in component ', $componentName)"/>
+                            <ctl:warning/>
+                          </xsl:when>
+                          <xsl:otherwise>
+                            <ctl:message select="concat('FAIL: swe:Quantity definition (', $outputSweQuantityDefinition, ') is not a valid parameter for sml:output ', $outputName, ' in component ', $componentName)"/>
+                            <ctl:fail/>
+                          </xsl:otherwise>
+                        </xsl:choose>
+                      </xsl:when>
+                      <xsl:otherwise>
+                         <!-- pass -->
+                      </xsl:otherwise>
+                    </xsl:choose>
+                  </xsl:for-each>
+                </xsl:otherwise>
+              </xsl:choose>
+            </xsl:for-each>
           </xsl:otherwise>
         </xsl:choose>
       </xsl:if>

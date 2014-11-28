@@ -2,7 +2,7 @@
 
 A set of CTL ([compliance test language](http://portal.opengeospatial.org/files/?artifact_id=33085)) files and utility scripts to test IOOS SOS implementations.
 
-Still very much a work in progress. All GetCapabilities tests have been implemented. DescribeSensor and GetObservation still need a lot of work.
+Still a work in progress. All GetCapabilities and DescribeSensor tests have been implemented. GetObservation still need a lot of work.
 
 See [list of covered tests](covered_tests.txt) for implementation converage.
 
