@@ -6,6 +6,7 @@
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
   xmlns:gml="http://www.opengis.net/gml"
+  xmlns:ows="http://www.opengis.net/ows/1.1"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
@@ -45,7 +46,7 @@
     <ctl:param name="parameter" />
     <ctl:return>True/False depending on whether the input is a fake parameter</ctl:return>
     <ctl:code>
-      <xsl:value-of select="starts-with($parameter, 'http://mmisw.org/ont/fake/parameter/')" />
+      <xsl:value-of select="starts-with($parameter, 'http://mmisw.org/ont/fake/parameter/') or $parameter = 'NONE'" />
     </ctl:code>
   </ctl:function>
 
@@ -162,7 +163,7 @@
     <ctl:param name="asset" />
     <ctl:return>True/False depending on whether the input is a valid IOOS asset URN</ctl:return>
     <ctl:code>
-      <xsl:variable name="ioosAssetUrnRegex" select="'^urn:ioos:(network|station|sensor)(:[A-Za-z0-9\._]+?){2,3}$'"/>
+      <xsl:variable name="ioosAssetUrnRegex" select="'^urn:ioos:(network|station|sensor)(:[A-Za-z0-9()+,\-.:=@;$_!*'']+){2,3}$'"/>
       <xsl:value-of select="exists($asset[matches(., $ioosAssetUrnRegex)])" />
     </ctl:code>
   </ctl:function>
@@ -195,7 +196,7 @@
     <ctl:param name="urn" />
     <ctl:return>True/False depending on whether the input is a valid IOOS network asset URN</ctl:return>
     <ctl:code>
-      <xsl:variable name="ioosNetworkUrnRegex" select="'^urn:ioos:network(:[A-Za-z0-9\._]+){2,2}$'"/>
+      <xsl:variable name="ioosNetworkUrnRegex" select="'^urn:ioos:network(:[A-Za-z0-9()+,\-.:=@;$_!*'']+){2,2}$'"/>
       <xsl:value-of select="exists($urn[matches(., $ioosNetworkUrnRegex)])" />
     </ctl:code>
   </ctl:function>
@@ -204,7 +205,7 @@
     <ctl:param name="urn" />
     <ctl:return>True/False depending on whether the input is a valid IOOS station asset URN</ctl:return>
     <ctl:code>
-      <xsl:variable name="ioosStationUrnRegex" select="'^urn:ioos:station(:[A-Za-z0-9\._]+){2,2}$'"/>
+      <xsl:variable name="ioosStationUrnRegex" select="'^urn:ioos:station(:[A-Za-z0-9()+,\-.:=@;$_!*'']+){2,2}$'"/>
       <xsl:value-of select="exists($urn[matches(., $ioosStationUrnRegex)])" />
     </ctl:code>
   </ctl:function>
@@ -213,7 +214,7 @@
     <ctl:param name="urn" />
     <ctl:return>True/False depending on whether the input is a valid IOOS sensor asset URN</ctl:return>
     <ctl:code>
-      <xsl:variable name="ioosSensorUrnRegex" select="'^urn:ioos:sensor(:[A-Za-z0-9\._]+){3,3}$'"/>
+      <xsl:variable name="ioosSensorUrnRegex" select="'^urn:ioos:sensor(:[A-Za-z0-9()+,\-.:=@;$_!*'']+){3,3}$'"/>
       <xsl:value-of select="exists($urn[matches(., $ioosSensorUrnRegex)])" />
     </ctl:code>
   </ctl:function>
@@ -222,7 +223,7 @@
     <ctl:param name="lat" />
     <ctl:return>True/False depending on whether the input is a valid latitude</ctl:return>
     <ctl:code>
-      <xsl:value-of select="$lat >= -180.0 and $lat &lt;= 180.0" />
+      <xsl:value-of select="$lat >= -90.0 and $lat &lt;= 90.0" />
     </ctl:code>
   </ctl:function>
 
@@ -230,7 +231,7 @@
     <ctl:param name="lng" />
     <ctl:return>True/False depending on whether the input is a valid longitude</ctl:return>
     <ctl:code>
-      <xsl:value-of select="$lng >= -90.0 and $lng &lt;= 90.0" />
+      <xsl:value-of select="$lng >= -180.0 and $lng &lt;= 180.0" />
     </ctl:code>
   </ctl:function>
 </ctl:package>

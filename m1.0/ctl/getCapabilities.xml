@@ -1,5 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ctl:package xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities" xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ctl:package
+  xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities"
+  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
+  xmlns:ctl="http://www.occamlab.com/ctl" 
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ows="http://www.opengis.net/ows/1.1"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:sos="http://www.opengis.net/sos/1.0"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="getCapabilities:allTests">
     <ctl:param name="capabilitiesDocument"/>
     <ctl:param name="testPattern"/>
@@ -314,7 +326,7 @@
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="ioosSosFn:isValidIoosAssetUrn(sos:procedure/@xlink:href) = false()">
-            <ctl:message select="concat('FAIL: sos:procedure/@xlink:href is not a valid IOOS asset URN in ObservationOffering ', @gml:id)"/>
+            <ctl:message select="concat('FAIL: sos:procedure/@xlink:href (', sos:procedure/@xlink:href, ') is not a valid IOOS asset URN in ObservationOffering ', @gml:id)"/>
             <ctl:fail/>
           </xsl:when>
           <xsl:when test="not(gml:name)">
@@ -344,8 +356,8 @@
           <xsl:if test="ioosSosFn:isValidParameter(@xlink:href, $rootDir) = false()">
             <xsl:choose>
               <xsl:when test="ioosSosFn:isFakeParameter(@xlink:href) = true()">
-                <ctl:message select="concat('FAIL: sos:observedProperty (', @xlink:href, ') is a fake parameter vocabulary in ObservationOffering ', $offeringGmlId)"/>
-                <ctl:warning/>
+                <!--<ctl:message select="concat('WARNING: sos:observedProperty (', @xlink:href, ') is a fake parameter vocabulary in ObservationOffering ', $offeringGmlId)"/>-->
+                <!--<ctl:warning/>-->
               </xsl:when>
               <xsl:otherwise>
                 <ctl:message select="concat('FAIL: sos:observedProperty (', @xlink:href, ') is not a term in a valid parameter vocabulary in ObservationOffering ', $offeringGmlId)"/>

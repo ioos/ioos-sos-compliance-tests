@@ -1,5 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<ctl:package xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor" xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions" xmlns:ctl="http://www.occamlab.com/ctl" xmlns:xsl="http://www.w3.org/1999/XSL/Transform" xmlns:ows="http://www.opengis.net/ows/1.1" xmlns:gml="http://www.opengis.net/gml" xmlns:sos="http://www.opengis.net/sos/1.0" xmlns:ogc="http://www.opengis.net/ogc" xmlns:om="http://www.opengis.net/om/1.0" xmlns:sml="http://www.opengis.net/sensorML/1.0.1" xmlns:swe="http://www.opengis.net/swe/1.0.1" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<ctl:package
+  xmlns:describeSensor="http://www.ioos.noaa.gov/sos/describeSensor"
+  xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
+  xmlns:ctl="http://www.occamlab.com/ctl"
+  xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
+  xmlns:ows="http://www.opengis.net/ows/1.1"
+  xmlns:gml="http://www.opengis.net/gml"
+  xmlns:sos="http://www.opengis.net/sos/1.0"
+  xmlns:ogc="http://www.opengis.net/ogc"
+  xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
+  xmlns:swe="http://www.opengis.net/swe/1.0.1"
+  xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+  xmlns:xlink="http://www.w3.org/1999/xlink"
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
   <ctl:test name="describeSensor:allTests">
     <ctl:param name="sensorMLDocument"/>
     <ctl:param name="capabilitiesDocument"/>
@@ -636,8 +650,8 @@
                       <xsl:when test="ioosSosFn:isValidParameter(swe:Quantity/@definition, $rootDir) = false()">
                         <xsl:choose>
                           <xsl:when test="ioosSosFn:isFakeParameter(swe:Quantity/@definition) = true()">
-                            <ctl:message select="concat('WARNING: swe:Quantity definition (', swe:Quantity/@definition, ') is a fake parameter URL for sml:output ', @name, ' in component ', $componentName)"/>
-                            <ctl:warning/>
+                            <!--<ctl:message select="concat('WARNING: swe:Quantity definition (', swe:Quantity/@definition, ') is a fake parameter URL for sml:output ', @name, ' in component ', $componentName)"/>-->
+                            <!--<ctl:warning/>-->
                           </xsl:when>
                           <xsl:otherwise>
                             <ctl:message select="concat('FAIL: swe:Quantity definition (', swe:Quantity/@definition, ') is not a valid parameter for sml:output ', @name, ' in component ', $componentName)"/>
@@ -969,31 +983,31 @@
               <xsl:variable name="componentSmlOutputList" select="$componentSmlOutputs/sml:OutputList"/>
               <xsl:choose>
                 <xsl:when test="not($componentSmlSystem)">
-                  <ctl:message select="concat('FAIL: component sml:System not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentSmlIdentification)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:identification not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentSmlIdentificationHref)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="ioosSosFn:isValidSensorUrn($componentSmlIdentificationHref) = false()">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href (', $componentSmlIdentificationHref, ') is not a valid IOOS sensor URN for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:identification/@xlink:href (', $componentSmlIdentificationHref, ') is not a valid IOOS sensor URN for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentSmlOutputs)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentSmlOutputList)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:when test="not($componentSmlOutputList/sml:output)">
-                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList/sml:output not found for ', $componentName)" />
+                  <ctl:message select="concat('FAIL: component sml:System/sml:outputs/sml:OutputList/sml:output not found for ', $componentName)"/>
                   <ctl:fail/>
                 </xsl:when>
                 <xsl:otherwise>
@@ -1003,22 +1017,22 @@
                     <xsl:variable name="outputSweQuantityDefinition" select="$outputSweQuantity/@definition"/>
                     <xsl:choose>
                       <xsl:when test="not($outputName)">
-                        <ctl:message select="concat('FAIL: output @name not found in ', $componentName)" />
+                        <ctl:message select="concat('FAIL: output @name not found in ', $componentName)"/>
                         <ctl:fail/>
                       </xsl:when>
                       <xsl:when test="not($outputSweQuantity)">
-                        <ctl:message select="concat('FAIL: output swe:Quantity not found for output ', $outputName, ' in component ', $componentName)" />
+                        <ctl:message select="concat('FAIL: output swe:Quantity not found for output ', $outputName, ' in component ', $componentName)"/>
                         <ctl:fail/>
                       </xsl:when>
                       <xsl:when test="not($outputSweQuantityDefinition)">
-                        <ctl:message select="concat('FAIL: output swe:Quantity/@definition not found for output ', $outputName, ' in component ', $componentName)" />
+                        <ctl:message select="concat('FAIL: output swe:Quantity/@definition not found for output ', $outputName, ' in component ', $componentName)"/>
                         <ctl:fail/>
                       </xsl:when>
                       <xsl:when test="ioosSosFn:isValidParameter($outputSweQuantityDefinition, $rootDir) = false()">
                         <xsl:choose>
                           <xsl:when test="ioosSosFn:isFakeParameter($outputSweQuantityDefinition) = true()">
-                            <ctl:message select="concat('WARNING: swe:Quantity definition (', $outputSweQuantityDefinition, ') is a fake parameter URL for sml:output ', $outputName, ' in component ', $componentName)"/>
-                            <ctl:warning/>
+                            <!--<ctl:message select="concat('WARNING: swe:Quantity definition (', $outputSweQuantityDefinition, ') is a fake parameter URL for sml:output ', $outputName, ' in component ', $componentName)"/>-->
+                            <!--<ctl:warning/>-->
                           </xsl:when>
                           <xsl:otherwise>
                             <ctl:message select="concat('FAIL: swe:Quantity definition (', $outputSweQuantityDefinition, ') is not a valid parameter for sml:output ', $outputName, ' in component ', $componentName)"/>
