@@ -1041,7 +1041,7 @@
                         </xsl:choose>
                       </xsl:when>
                       <xsl:otherwise>
-                         <!-- pass -->
+                        <!-- pass -->
                       </xsl:otherwise>
                     </xsl:choose>
                   </xsl:for-each>

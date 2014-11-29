@@ -2,7 +2,7 @@
 <ctl:package
   xmlns:getCapabilities="http://www.ioos.noaa.gov/sos/getCapabilities"
   xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
-  xmlns:ctl="http://www.occamlab.com/ctl" 
+  xmlns:ctl="http://www.occamlab.com/ctl"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:ows="http://www.opengis.net/ows/1.1"
   xmlns:gml="http://www.opengis.net/gml"

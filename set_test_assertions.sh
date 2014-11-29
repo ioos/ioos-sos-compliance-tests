@@ -25,7 +25,9 @@ for f in tmp/*.txt; do
     IFS='|' read -a array <<< "$t"
     if grep -q "${array[0]}" "$TARGET_FILE"; then
       echo "Setting assertion for ${array[0]}"
-      xmlstarlet ed --ps --inplace --update "/ctl:package/ctl:test[@name=\"${array[0]}\"]/ctl:assertion" -v "${array[1]}" "$TARGET_FILE"
+      xmlstarlet ed --inplace --update "/ctl:package/ctl:test[@name=\"${array[0]}\"]/ctl:assertion" -v "${array[1]}" "$TARGET_FILE"
+      #fix namespace spacing
+      sed -i 's/ xmlns/\n  xmlns/g' "$TARGET_FILE"
     fi
   done < $f
 done
