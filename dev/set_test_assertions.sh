@@ -1,6 +1,9 @@
 #!/bin/bash
+DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+ROOT=$DIR/..
+
 command -v xmlstarlet >/dev/null 2>&1 || { echo "xmlstarlet is required but not installed (aptitude install -y xmlstarlet)" >&2; exit 1; }
-cd $(dirname $0)
+cd $DIR
 
 rm -rf tmp
 mkdir tmp
@@ -18,7 +21,7 @@ sed -i 's/ \(.*\)|/\1|/g' tmp/*.txt
 sed -i 's/ \(.*\)|/\1|/g' tmp/*.txt
 
 for f in tmp/*.txt; do
-  TARGET_FILE=m1.0/ctl/`echo $f | sed -e 's/^tmp\///' -e 's/\.txt$/\.xml/'`
+  TARGET_FILE=$ROOT/m1.0/ctl/`echo $f | sed -e 's/^tmp\///' -e 's/\.txt$/\.xml/'`
   [[ -e "$TARGET_FILE" ]] || { echo "$TARGET_FILE" doesn\'t exist, skipping.; continue; }
   echo "Processing $TARGET_FILE"
   while read t; do
