@@ -1,4 +1,5 @@
-bin/logs
-bin/teamengine-*
+teamengine
+target
+dev/logs
+dev/tmp
 *.swp
-tmp
