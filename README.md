@@ -13,7 +13,19 @@ See [full test list](https://github.com/ioos/sos-guidelines/blob/master/doc/test
 
 Java 7+ is required.
 
-This project is tested on Linux but should also run on Mac OS X. Windows is not currently supported but may be possible.
+This project is tested on Linux but should also run on Mac OS X. Windows is not directly supported at the moment but it is possible to make it work in two ways:
+
+1. Install a virtualization platform with Linux as a guest OS; Oracle VirtualBox with Linux Mint works perfectly;
+2. If the GitHub for Windows is already installed it is possible to run the tests in the Bash environment for Windows:
+  * install [MinGW (Minimalist GNU for Windows) with msys](http://sourceforge.net/projects/mingw/);
+  * copy the following files from the “C:\MinGW\msys\1.0\bin” folder to the “C:\Program Files (x86)\Git\bin” folder (the real paths depend on where the MinGW and Git for Windows were installed, and may vary):
+    - readlink.exe
+    - grep.exe  (replace existing file)
+    - msys-iconv-2.dll
+    - msys-intl-8.dll
+  * install the latest Java SE Runtime Environment (JRE for end users) or upgrade it to the version 7+
+
+
 
 ## Usage
 
