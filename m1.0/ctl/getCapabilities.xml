@@ -195,7 +195,7 @@
           <ctl:fail/>
         </xsl:when>
         <xsl:otherwise>
-          <xsl:if test="not($outputFormats/ows:Value[matches(.,'text/xml;[ ].*?subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')])">
+          <xsl:if test="not($outputFormats/ows:Value[matches(.,'text/xml;(\s*)subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')])">
             <ctl:message>FAIL: ows:Operation[@name='DescribeSensor' must have allowed outputFormat 'text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"'</ctl:message>
             <ctl:fail/>
           </xsl:if>
@@ -208,7 +208,7 @@
     <ctl:assertion>The values in the responseFormat element(s) for each ObservationOffering contain ‘text/xml; subtype=“om/1.0.0/profiles/ioos_sos/1.0”’</ctl:assertion>
     <ctl:code>
       <xsl:for-each select="$capabilitiesDocument/sos:Contents/sos:ObservationOfferingList/sos:ObservationOffering">
-        <xsl:if test="not(sos:responseFormat[matches(.,'text/xml;[ ].*?subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')])">
+        <xsl:if test="not(sos:responseFormat[matches(.,'text/xml;(\s*)subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')])">
           <ctl:message select="concat('FAIL: responseFormat text/xml;subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot; not found in ObservationOffering ', @gml:id)"/>
           <ctl:fail/>
         </xsl:if>
