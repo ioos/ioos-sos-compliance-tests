@@ -20,9 +20,10 @@ IF NOT EXIST "%CTLDIR%" (
   EXIT /B 1
 )
 
-IF NOT [%TEST%] == [] (
+IF NOT [%TESTS%] == [] (
   SET TESTSPARAM=@tests="%TESTS%"
 )
 
 SET CONFIGPARAM=%CONFIGFILE:\=/%
-%DIR%/teamengine/bin/windows/test.bat -source="%CTLDIR%" @configFile="%CONFIGPARAM%" @rootDir="%DIR%" %TESTSPARAM%
+SET ROOTDIRPARAM=%DIR:\=/%
+%DIR%/teamengine/bin/windows/test.bat -source="%CTLDIR%" @configFile="%CONFIGPARAM%" @rootDir="%ROOTDIRPARAM%" %TESTSPARAM%
