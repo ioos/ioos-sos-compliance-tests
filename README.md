@@ -13,7 +13,7 @@ See [full test list](https://github.com/ioos/sos-guidelines/blob/master/doc/test
 
 Java 7+ is required.
 
-This project is tested on Linux but should also run on Mac OS X. Windows is not currently supported but may be possible.
+This project is tested on Linux and Windows but should also run on Mac OS X.
 
 ## Usage
 
@@ -61,7 +61,7 @@ The example config targets the i52n development continuous integration build.
 </config>
 ```
 
-### Run the tests
+### Run the tests (Linux)
 
 Run the test initiation script with the config file path as an argument.
 
@@ -74,5 +74,19 @@ Optionally include a regex pattern as a second argument to only run matching tes
 ```
 ./run_tests.sh path/to/your-test-config.xml ResponseContainsValidSRSName.1
 ./run_tests.sh path/to/your-test-config.xml "describeSensor*"
+```
+
+To redirect the test output to a file:
+
+```
+./run_tests.sh path/to/your-test-config.xml > /path/to/outputfile.txt
+```
+
+### Run the tests (Windows)
+
+Basically the same as Linux, with Windows style paths:
+
+```
+run_tests.bat ..\yourconfig.xml > %USERPROFILE%\sos-test.txt
 ```
 
