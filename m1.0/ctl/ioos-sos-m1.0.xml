@@ -239,9 +239,11 @@
             <ctl:param name="service">SOS</ctl:param> 
             <ctl:param name="version">1.0.0</ctl:param>
             <ctl:param name="procedure">
-              <xsl:value-of select="$procedure" />
+              <xsl:value-of select="encode-for-uri($procedure)" />
             </ctl:param>
-            <ctl:param name="outputFormat">text/xml;subtype="sensorML/1.0.1/profiles/ioos_sos/1.0"</ctl:param>
+            <ctl:param name="outputFormat">
+              <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')" />
+            </ctl:param>
             <ctl:call-function name="sosFunctions:xmlValidatingParser">
               <ctl:with-param name="schemaFile" select="$schema"/>
             </ctl:call-function>
@@ -293,24 +295,26 @@
             <ctl:param name="service">SOS</ctl:param> 
             <ctl:param name="version">1.0.0</ctl:param>
             <ctl:param name="offering">
-              <xsl:value-of select="$getObservationConstellation/offering" />
+              <xsl:value-of select="encode-for-uri($getObservationConstellation/offering)" />
             </ctl:param>
             <xsl:for-each select="$getObservationConstellation/procedures/procedure">
               <ctl:param name="procedure">
-                <xsl:value-of select="text()" />
+                <xsl:value-of select="encode-for-uri(text())" />
               </ctl:param>
             </xsl:for-each>
             <xsl:for-each select="$getObservationConstellation/observedProperties/observedProperty">
               <ctl:param name="observedProperty">
-                <xsl:value-of select="text()" />
+                <xsl:value-of select="encode-for-uri(text())" />
               </ctl:param>
             </xsl:for-each>
             <xsl:if test="$getObservationConstellation/startTime and $getObservationConstellation/endTime">
               <ctl:param name="eventTime">
-                <xsl:value-of select="$getObservationConstellation/startTime" />/<xsl:value-of select="$getObservationConstellation/endTime" />
+                <xsl:value-of select="encode-for-uri($getObservationConstellation/startTime)" />/<xsl:value-of select="encode-for-uri($getObservationConstellation/endTime)" />
               </ctl:param>
             </xsl:if>
-            <ctl:param name="responseFormat">text/xml;subtype="om/1.0.0/profiles/ioos_sos/1.0"</ctl:param>
+            <ctl:param name="responseFormat">
+              <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')" />
+            </ctl:param>
             <ctl:call-function name="sosFunctions:xmlValidatingParser">
               <ctl:with-param name="schemaFile" select="$schema"/>
             </ctl:call-function>
