@@ -26,4 +26,9 @@ IF NOT [%TESTS%] == [] (
 
 SET CONFIGPARAM=%CONFIGFILE:\=/%
 SET ROOTDIRPARAM=%DIR:\=/%
+
+REM Use local hidden TE_BASE
+RD /S /Q %DIR%\.te_base
+SET TE_BASE=%DIR%\.te_base
+
 %DIR%/teamengine/bin/windows/test.bat -source="%CTLDIR%" @configFile="%CONFIGPARAM%" @rootDir="%ROOTDIRPARAM%" %TESTSPARAM%

@@ -1,6 +1,7 @@
 teamengine
 target
 tmp
+.te_base
 dev/logs
 dev/tmp
 *.swp
