@@ -58,6 +58,22 @@
           initialized="true"/>
   </ctl:function>
   
+  <ctl:function name="ioosSosFn:createGetRequest">
+    <ctl:param name="url">Root request URL</ctl:param>
+    <ctl:param name="params">ctl:param request parameters</ctl:param>
+    <ctl:return>Assembled request URL with query params</ctl:return>
+    <ctl:code>
+       <xsl:value-of select="$url" />
+       <xsl:if test="$params and $params/ctl:param">
+         <xsl:value-of select="'?'" />
+         <xsl:for-each select="$params/ctl:param">
+            <xsl:value-of select="@name" /><xsl:value-of select="'='" /><xsl:value-of select="text()" />
+            <xsl:if test="position() != last()">&amp;</xsl:if>
+         </xsl:for-each>
+       </xsl:if>
+    </ctl:code>
+  </ctl:function>
+
   <ctl:function name="ioosSosFn:getFullExceptionInfo">
     <ctl:param name="exceptionReport">The exception report</ctl:param>
     <ctl:return>The Exception Code, Locator, and Text of an exception report</ctl:return>

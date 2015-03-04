@@ -15,10 +15,12 @@
   xmlns:xml="http://www.w3.org/XML/1998/namespace"
   xmlns:ogc="http://www.opengis.net/ogc"
   xmlns:om="http://www.opengis.net/om/1.0"
+  xmlns:saxon="http://saxon.sf.net/"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
 
   <ctl:suite name="ioosSos:ioosSos">
     <ctl:title>IOOS SOS test suite</ctl:title>
@@ -124,15 +126,21 @@
       <xsl:variable name="sensorMLSchema" select="sosFunctions:schemaPath($schemaRoot, '1.0.1', 'sensorML', 'sensorML.xsd')" />
       <xsl:variable name="omSchema" select="sosFunctions:schemaPath($schemaRoot, '1.0.0', 'om', 'om.xsd')" />
 
+      <xsl:variable name="params">
+        <ctl:param name="request">GetCapabilities</ctl:param>
+        <ctl:param name="service">SOS</ctl:param> 
+        <ctl:param name="AcceptVersions">1.0.0</ctl:param>
+      </xsl:variable>
+
+      <ctl:message select="concat('Sending GET request: ', ioosSosFn:createGetRequest($serviceUrl, $params))" />
+
       <xsl:variable name="capabilitiesDocument">
         <ctl:request>
           <ctl:url>
             <xsl:value-of select="$serviceUrl"/>
           </ctl:url>
           <ctl:method>get</ctl:method>  
-          <ctl:param name="request">GetCapabilities</ctl:param>
-          <ctl:param name="service">SOS</ctl:param> 
-          <ctl:param name="AcceptVersions">1.0.0</ctl:param>
+          <xsl:copy-of select="$params" />
         </ctl:request>
       </xsl:variable>
 
@@ -233,21 +241,28 @@
       <xsl:for-each select="$procedures">
         <xsl:variable name="procedure" select="." />
         <ctl:message select="concat('Checking procedure: ', $procedure)" />
+
+        <xsl:variable name="params">
+          <ctl:param name="request">DescribeSensor</ctl:param>
+          <ctl:param name="service">SOS</ctl:param> 
+          <ctl:param name="version">1.0.0</ctl:param>
+          <ctl:param name="procedure">
+            <xsl:value-of select="encode-for-uri($procedure)" />
+          </ctl:param>
+          <ctl:param name="outputFormat">
+            <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')" />
+          </ctl:param>
+        </xsl:variable>
+
+        <ctl:message select="concat('Sending GET request: ', ioosSosFn:createGetRequest($serviceUrl, $params))" />
+
         <xsl:variable name="sensorMLDocument">
           <ctl:request>
             <ctl:url>
               <xsl:value-of select="$serviceUrl"/>
             </ctl:url>
             <ctl:method>get</ctl:method>  
-            <ctl:param name="request">DescribeSensor</ctl:param>
-            <ctl:param name="service">SOS</ctl:param> 
-            <ctl:param name="version">1.0.0</ctl:param>
-            <ctl:param name="procedure">
-              <xsl:value-of select="encode-for-uri($procedure)" />
-            </ctl:param>
-            <ctl:param name="outputFormat">
-              <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;sensorML/1.0.1/profiles/ioos_sos/1.0&quot;')" />
-            </ctl:param>
+            <xsl:copy-of select="$params" />
           </ctl:request>
         </xsl:variable>
 
@@ -288,36 +303,43 @@
       <xsl:for-each select="$getObservation/getObservationConstellations/getObservationConstellation">
         <xsl:variable name="getObservationConstellation" select="." />
         <ctl:message select="ioosSosFn:getGetObservationConstellationInfo($getObservationConstellation)" />
+
+        <xsl:variable name="params">
+          <ctl:param name="request">GetObservation</ctl:param>
+          <ctl:param name="service">SOS</ctl:param> 
+          <ctl:param name="version">1.0.0</ctl:param>
+          <ctl:param name="offering">
+            <xsl:value-of select="encode-for-uri($getObservationConstellation/offering)" />
+          </ctl:param>
+          <xsl:for-each select="$getObservationConstellation/procedures/procedure">
+            <ctl:param name="procedure">
+              <xsl:value-of select="encode-for-uri(text())" />
+            </ctl:param>
+          </xsl:for-each>
+          <xsl:for-each select="$getObservationConstellation/observedProperties/observedProperty">
+            <ctl:param name="observedProperty">
+              <xsl:value-of select="encode-for-uri(text())" />
+            </ctl:param>
+          </xsl:for-each>
+          <xsl:if test="$getObservationConstellation/startTime and $getObservationConstellation/endTime">
+            <ctl:param name="eventTime">
+              <xsl:value-of select="encode-for-uri($getObservationConstellation/startTime)" />/<xsl:value-of select="encode-for-uri($getObservationConstellation/endTime)" />
+            </ctl:param>
+          </xsl:if>
+          <ctl:param name="responseFormat">
+            <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')" />
+          </ctl:param>
+        </xsl:variable>
+
+        <ctl:message select="concat('Sending GET request: ', ioosSosFn:createGetRequest($serviceUrl, $params))" />
+
         <xsl:variable name="observationCollectionDocument">
           <ctl:request>
             <ctl:url>
               <xsl:value-of select="$serviceUrl"/>
             </ctl:url>
             <ctl:method>get</ctl:method>
-            <ctl:param name="request">GetObservation</ctl:param>
-            <ctl:param name="service">SOS</ctl:param> 
-            <ctl:param name="version">1.0.0</ctl:param>
-            <ctl:param name="offering">
-              <xsl:value-of select="encode-for-uri($getObservationConstellation/offering)" />
-            </ctl:param>
-            <xsl:for-each select="$getObservationConstellation/procedures/procedure">
-              <ctl:param name="procedure">
-                <xsl:value-of select="encode-for-uri(text())" />
-              </ctl:param>
-            </xsl:for-each>
-            <xsl:for-each select="$getObservationConstellation/observedProperties/observedProperty">
-              <ctl:param name="observedProperty">
-                <xsl:value-of select="encode-for-uri(text())" />
-              </ctl:param>
-            </xsl:for-each>
-            <xsl:if test="$getObservationConstellation/startTime and $getObservationConstellation/endTime">
-              <ctl:param name="eventTime">
-                <xsl:value-of select="encode-for-uri($getObservationConstellation/startTime)" />/<xsl:value-of select="encode-for-uri($getObservationConstellation/endTime)" />
-              </ctl:param>
-            </xsl:if>
-            <ctl:param name="responseFormat">
-              <xsl:value-of select="encode-for-uri('text/xml;subtype=&quot;om/1.0.0/profiles/ioos_sos/1.0&quot;')" />
-            </ctl:param>
+            <xsl:copy-of select="$params" />
           </ctl:request>
         </xsl:variable>
 
@@ -354,11 +376,28 @@
     <ctl:assertion>SOS offers valid GetCapabilities via POST.</ctl:assertion>
     <ctl:code>
       <xsl:variable name="postUrl" select="sosFunctions:operationPostURL($capabilitiesDocument, 'GetCapabilities')" />
+      <xsl:variable name="request">
+        <sos:GetCapabilities
+          xmlns:sos="http://www.opengis.net/sos/1.0"
+          xmlns:ows="http://www.opengis.net/ows/1.1"
+          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd"
+          service="SOS">
+          <ows:AcceptVersions>
+            <ows:Version>1.0.0</ows:Version>
+          </ows:AcceptVersions>
+        </sos:GetCapabilities>
+      </xsl:variable>
+
       <xsl:choose>
         <xsl:when test="not($postUrl)">
           <ctl:message>WARNING: GetCapabilities POST requests are not support by service, not testing.</ctl:message>
         </xsl:when>
         <xsl:otherwise>
+
+          <ctl:message select="concat('Sending POST request: ', $postUrl)" />
+          <ctl:message select="saxon:serialize($request, '')" />
+
           <xsl:variable name="postCapabilitiesDocument">
             <ctl:request>
               <ctl:url>
@@ -366,16 +405,7 @@
               </ctl:url>
               <ctl:method>post</ctl:method>
               <ctl:body>
-                <sos:GetCapabilities
-                  xmlns:sos="http://www.opengis.net/sos/1.0"
-                  xmlns:ows="http://www.opengis.net/ows/1.1"
-                  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-                  xsi:schemaLocation="http://www.opengis.net/sos/1.0 http://schemas.opengis.net/sos/1.0.0/sosGetCapabilities.xsd"
-                  service="SOS">
-                  <ows:AcceptVersions>
-                    <ows:Version>1.0.0</ows:Version>
-                  </ows:AcceptVersions>
-                </sos:GetCapabilities>
+                <xsl:copy-of select="$request" />
               </ctl:body>
             </ctl:request>
           </xsl:variable>
