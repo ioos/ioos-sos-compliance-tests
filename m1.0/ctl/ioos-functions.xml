@@ -2,6 +2,7 @@
 <ctl:package
   xmlns:ctl="http://www.occamlab.com/ctl"
   xmlns:ioosSosFn="http://www.ioos.noaa.gov/sos/functions"
+  xmlns:parsers="http://www.occamlab.com/te/parsers"
   xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
   xmlns:sml="http://www.opengis.net/sensorML/1.0.1"
@@ -10,6 +11,53 @@
   xmlns:xsd="http://www.w3.org/2001/XMLSchema" 
   xmlns:xlink="http://www.w3.org/1999/xlink"
   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+  <ctl:function name="ioosSosFn:validateXml">
+    <ctl:param name="doc">doc</ctl:param>
+    <ctl:param name="schemaFile">schemaFile</ctl:param>
+    <ctl:description>Validate an XML document</ctl:description>
+    <ctl:code>
+      <ctl:message>Checking schema validity</ctl:message>
+      <xsl:variable name="result">
+        <ctl:call-function name="ioosSosFn:executeXmlValidator">
+          <ctl:with-param name="doc">
+            <xsl:copy-of select="$doc" />
+          </ctl:with-param>
+          <ctl:with-param name="instruction">
+            <parsers:schemas>
+              <parsers:schema type="resource">xsd/w3c/xml.xsd</parsers:schema>
+              <parsers:schema type="resource">
+                <xsl:value-of select="$schemaFile"/>
+              </parsers:schema>
+              <parsers:schema type="resource">xsd/ogc/ows/1.1.0/owsExceptionReport.xsd</parsers:schema>
+            </parsers:schemas>
+          </ctl:with-param>
+        </ctl:call-function>
+      </xsl:variable>
+      <xsl:choose>
+        <xsl:when test="$result/errors/error">
+          <ctl:message>FAIL: Schema validation failed</ctl:message>
+          <xsl:for-each select="$result/errors/error">
+            <ctl:message select="concat('Validation error: ', .)" />
+          </xsl:for-each>
+          <ctl:fail />
+        </xsl:when>
+        <xsl:otherwise>
+          <ctl:message>Schema check passed</ctl:message>
+        </xsl:otherwise>
+      </xsl:choose>
+    </ctl:code>
+  </ctl:function>
+
+  <ctl:function name="ioosSosFn:executeXmlValidator">
+    <ctl:param name="doc">document</ctl:param>
+    <ctl:param name="instruction">instruction</ctl:param>
+    <ctl:description>Execute XML validation</ctl:description>
+    <ctl:java class="com.occamlab.te.parsers.XMLValidatingParser" 
+          method="validateSingleResult" 
+          initialized="true"/>
+  </ctl:function>
+  
   <ctl:function name="ioosSosFn:getFullExceptionInfo">
     <ctl:param name="exceptionReport">The exception report</ctl:param>
     <ctl:return>The Exception Code, Locator, and Text of an exception report</ctl:return>

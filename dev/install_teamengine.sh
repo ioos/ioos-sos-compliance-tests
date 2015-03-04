@@ -9,7 +9,8 @@ ROOT="$DIR"/..
 #GIT_REPO=git@github.com:opengeospatial/teamengine.git
 #TARGET=master
 GIT_REPO=git@github.com:shane-axiom/teamengine.git
-GIT_BRANCH=fix-inherited-failure
+#GIT_BRANCH=fix-inherited-failure
+GIT_BRANCH=unified
 TE_BIN_ZIP=tmp/teamengine/teamengine-console/target/teamengine-console-*-bin.zip
 cd "$DIR"
 
