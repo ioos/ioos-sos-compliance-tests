@@ -406,10 +406,10 @@
         <xsl:variable name="boundedBy" select="$sensorMLDocument/sml:member[1]/sml:System[1]/gml:boundedBy"/>
         <xsl:variable name="boundedByLowerCorner" select="$boundedBy/gml:Envelope/gml:lowerCorner"/>
         <xsl:variable name="boundedByUpperCorner" select="$boundedBy/gml:Envelope/gml:upperCorner"/>
-        <xsl:variable name="boundedByMinLat" select="number(tokenize($boundedByLowerCorner/text(),' ')[1])"/>
-        <xsl:variable name="boundedByMinLng" select="number(tokenize($boundedByLowerCorner/text(),' ')[2])"/>
-        <xsl:variable name="boundedByMaxLat" select="number(tokenize($boundedByUpperCorner/text(),' ')[1])"/>
-        <xsl:variable name="boundedByMaxLng" select="number(tokenize($boundedByUpperCorner/text(),' ')[2])"/>
+        <xsl:variable name="boundedByMinLng" select="number(tokenize($boundedByLowerCorner/text(),' ')[1])"/>
+        <xsl:variable name="boundedByMinLat" select="number(tokenize($boundedByLowerCorner/text(),' ')[2])"/>
+        <xsl:variable name="boundedByMaxLng" select="number(tokenize($boundedByUpperCorner/text(),' ')[1])"/>
+        <xsl:variable name="boundedByMaxLat" select="number(tokenize($boundedByUpperCorner/text(),' ')[2])"/>
         <xsl:variable name="componentList" select="$sensorMLDocument/sml:member[1]/sml:System/sml:components/sml:ComponentList"/>
         <xsl:choose>
           <xsl:when test="not($boundedBy)">
@@ -470,8 +470,8 @@
               <xsl:variable name="componentLocation" select="$componentSystem/sml:location"/>
               <xsl:variable name="componentPoint" select="$componentLocation/gml:Point"/>
               <xsl:variable name="componentPos" select="$componentPoint/gml:pos"/>
-              <xsl:variable name="componentPosLat" select="number(tokenize($componentPos/text(),' ')[1])"/>
-              <xsl:variable name="componentPosLng" select="number(tokenize($componentPos/text(),' ')[2])"/>
+              <xsl:variable name="componentPosLng" select="number(tokenize($componentPos/text(),' ')[1])"/>
+              <xsl:variable name="componentPosLat" select="number(tokenize($componentPos/text(),' ')[2])"/>
               <xsl:choose>
                 <xsl:when test="not($componentSystem)">
                   <ctl:message select="concat('FAIL: component sml:System not found for component ', @name)"/>
@@ -901,8 +901,8 @@
         <xsl:variable name="smlLocation" select="$smlSystem/sml:location"/>
         <xsl:variable name="gmlPoint" select="$smlLocation/gml:Point"/>
         <xsl:variable name="gmlPos" select="$gmlPoint/gml:pos"/>
-        <xsl:variable name="gmlPosLat" select="number(tokenize($gmlPos/text(),' ')[1])"/>
-        <xsl:variable name="gmlPosLng" select="number(tokenize($gmlPos/text(),' ')[2])"/>
+        <xsl:variable name="gmlPosLng" select="number(tokenize($gmlPos/text(),' ')[1])"/>
+        <xsl:variable name="gmlPosLat" select="number(tokenize($gmlPos/text(),' ')[2])"/>
         <xsl:choose>
           <xsl:when test="not($smlSystem)">
             <ctl:message>FAIL: sml:System not found</ctl:message>
