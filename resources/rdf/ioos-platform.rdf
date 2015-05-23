@@ -12,8 +12,8 @@
     <owl:Ontology rdf:about="">
         <omv:uri>http://mmisw.org/ont/ioos/platform</omv:uri>
         <dc:date>2013-04-03T14:29:41+0000</dc:date>
+        <omv:creationDate>2015-05-23T07:01:10+0000</omv:creationDate>
         <omvmmi:hasResourceType>platform</omvmmi:hasResourceType>
-        <omv:creationDate>2014-11-26T06:46:50+0000</omv:creationDate>
         <omvmmi:temporaryMmiRole>content manager</omvmmi:temporaryMmiRole>
         <omv:keywords>platform, station, sensor, system</omv:keywords>
         <omvmmi:hasContentCreator>Sara Haines</omvmmi:hasContentCreator>

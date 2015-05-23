@@ -10,6 +10,7 @@
     xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
     xml:base="http://mmisw.org/ont/ioos/parameter">
     <owl:Ontology rdf:about="">
+        <omv:creationDate>2015-05-23T07:01:09+0000</omv:creationDate>
         <omvmmi:hasContentCreator>IOOS</omvmmi:hasContentCreator>
         <dc:creator>Sara Haines</dc:creator>
         <omvmmi:contactRole>content manager</omvmmi:contactRole>
@@ -29,7 +30,6 @@
         <omvmmi:shortNameUri>http://mmisw.org/ont/mmi/resourcetype/parameter</omvmmi:shortNameUri>
         <dc:description>This is a vocabulary of the parameters used in IOOS.  It has been developed, in coordination with SECOORA, the COARDS Climate-Forecast Standard Names, and input from the 11 Regional Associations in IOOS and the NOAA IOOS Program Office.</dc:description>
         <omvmmi:hasResourceType>parameter</omvmmi:hasResourceType>
-        <omv:creationDate>2014-11-26T06:46:50+0000</omv:creationDate>
         <dc:date>2013-02-28T14:18:08+0000</dc:date>
     </owl:Ontology>
     <owl:Class rdf:about="http://mmisw.org/ont/ioos/parameter/Parameter">

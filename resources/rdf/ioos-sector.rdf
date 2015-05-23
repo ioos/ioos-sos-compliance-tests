@@ -12,10 +12,10 @@
     <owl:Ontology rdf:about="">
         <dc:date>2012-08-08T20:51:28+0000</dc:date>
         <omvmmi:shortNameUri>http://mmisw.org/ont/mmi/resourcetype/organization</omvmmi:shortNameUri>
+        <omv:creationDate>2015-05-23T07:01:10+0000</omv:creationDate>
         <dc:creator>Emilio Mayorga</dc:creator>
         <omv:name>IOOS Organization Societal Sector</omv:name>
         <omv:hasCreator>Emilio Mayorga</omv:hasCreator>
-        <omv:creationDate>2014-11-26T06:46:51+0000</omv:creationDate>
         <omv:version>20120808T205128</omv:version>
         <omv:acronym>sector</omv:acronym>
         <omvmmi:creditRequired>not specified</omvmmi:creditRequired>

@@ -14,7 +14,6 @@
         <omv:usedOntologyEngineeringTool rdf:resource="http://mmisw.org/ont/mmi/20081020/ontologyMetadata/voc2rdf"/>
         <omvmmi:creditRequired>not specified</omvmmi:creditRequired>
         <omv:acronym>organization</omv:acronym>
-        <omv:creationDate>2014-11-26T06:46:50+0000</omv:creationDate>
         <omvmmi:hasResourceType>organization</omvmmi:hasResourceType>
         <omv:description>IOOS Partner Organizations</omv:description>
         <omv:version>20140812T214210</omv:version>
@@ -23,6 +22,7 @@
         <dc:description>IOOS Partner Organizations</dc:description>
         <omvmmi:hasContentCreator>rob ragsdale</omvmmi:hasContentCreator>
         <omvmmi:origMaintainerCode>ioos</omvmmi:origMaintainerCode>
+        <omv:creationDate>2015-05-23T07:01:09+0000</omv:creationDate>
         <dc:creator>rob ragsdale</dc:creator>
         <dc:date>2014-08-12T21:42:10+0000</dc:date>
         <omvmmi:shortNameUri>http://mmisw.org/ont/mmi/resourcetype/organization</omvmmi:shortNameUri>
