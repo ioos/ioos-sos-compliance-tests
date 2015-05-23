@@ -151,62 +151,74 @@
           <ctl:fail />
         </xsl:when>
         <xsl:otherwise>
-          <ctl:call-function name="ioosSosFn:validateXml">
-            <ctl:with-param name="doc" select="$capabilitiesDocument"/>
-            <ctl:with-param name="schemaFile" select="$capabilitiesSchema"/>
-          </ctl:call-function>
+          <xsl:choose>
+            <xsl:when test="not($capabilitiesDocument)">
+              <ctl:message>FAIL: GetCapabilites was empty (is SOS running and configured?)</ctl:message>
+              <ctl:fail />
+            </xsl:when>
+            <xsl:when test="starts-with($capabilitiesDocument, '&lt;html&gt;')">
+              <ctl:message>FAIL: GetCapabilites response is an HTML document (is SOS running and configured?)</ctl:message>
+              <ctl:fail />
+            </xsl:when>
+            <xsl:otherwise>
+              <ctl:call-function name="ioosSosFn:validateXml">
+                <ctl:with-param name="doc" select="$capabilitiesDocument"/>
+                <ctl:with-param name="schemaFile" select="$capabilitiesSchema"/>
+              </ctl:call-function>
 
-          <!-- get procedures for DescribeSensor test, either from the config or by scanning offerings in Capabilities -->
-          <xsl:variable name="describeSensorProcedures">
-            <xsl:choose>
-              <xsl:when test="$config/describeSensor/@checkAll = 'true'">
-                <xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/sos:procedure">
-                  <procedure><xsl:value-of select="@xlink:href" /></procedure>
-                </xsl:for-each>
-              </xsl:when>
-              <xsl:otherwise>
-                <xsl:for-each select="$config/describeSensor/procedures/procedure">
-                  <procedure><xsl:value-of select="." /></procedure>
-                </xsl:for-each>
-              </xsl:otherwise>
-            </xsl:choose>
-          </xsl:variable> 
+              <!-- get procedures for DescribeSensor test, either from the config or by scanning offerings in Capabilities -->
+              <xsl:variable name="describeSensorProcedures">
+                <xsl:choose>
+                  <xsl:when test="$config/describeSensor/@checkAll = 'true'">
+                    <xsl:for-each select="$capabilitiesDocument//sos:ObservationOffering/sos:procedure">
+                      <procedure><xsl:value-of select="@xlink:href" /></procedure>
+                    </xsl:for-each>
+                  </xsl:when>
+                  <xsl:otherwise>
+                    <xsl:for-each select="$config/describeSensor/procedures/procedure">
+                      <procedure><xsl:value-of select="." /></procedure>
+                    </xsl:for-each>
+                  </xsl:otherwise>
+                </xsl:choose>
+              </xsl:variable> 
 
-          <!-- GET: GetCapabilities -->
-          <ctl:call-test name="ioosSos:getCapabilities-get">
-            <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
-            <ctl:with-param name="schema" select="$capabilitiesSchema" />
-            <ctl:with-param name="testPattern" select="$testPattern" />
-            <ctl:with-param name="rootDir" select="$rootDir" />
-          </ctl:call-test>
+              <!-- GET: GetCapabilities -->
+              <ctl:call-test name="ioosSos:getCapabilities-get">
+                <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
+                <ctl:with-param name="schema" select="$capabilitiesSchema" />
+                <ctl:with-param name="testPattern" select="$testPattern" />
+                <ctl:with-param name="rootDir" select="$rootDir" />
+              </ctl:call-test>
 
-          <!-- GET: DescribeSensor -->
-          <ctl:call-test name="ioosSos:describeSensor-get">
-            <ctl:with-param name="procedures" select="$describeSensorProcedures" />
-            <ctl:with-param name="schema" select="$sensorMLSchema" />
-            <ctl:with-param name="serviceUrl" select="$serviceUrl" />
-            <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
-            <ctl:with-param name="testPattern" select="$testPattern" />
-            <ctl:with-param name="rootDir" select="$rootDir" />
-          </ctl:call-test>
+              <!-- GET: DescribeSensor -->
+              <ctl:call-test name="ioosSos:describeSensor-get">
+                <ctl:with-param name="procedures" select="$describeSensorProcedures" />
+                <ctl:with-param name="schema" select="$sensorMLSchema" />
+                <ctl:with-param name="serviceUrl" select="$serviceUrl" />
+                <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
+                <ctl:with-param name="testPattern" select="$testPattern" />
+                <ctl:with-param name="rootDir" select="$rootDir" />
+              </ctl:call-test>
 
-          <!-- GET: GetObservation -->
-          <ctl:call-test name="ioosSos:getObservation-get">
-            <ctl:with-param name="getObservation" select="$config/getObservation" />
-            <ctl:with-param name="schema" select="$omSchema" />
-            <ctl:with-param name="serviceUrl" select="$serviceUrl" />
-            <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
-            <ctl:with-param name="testPattern" select="$testPattern" />
-            <ctl:with-param name="rootDir" select="$rootDir" />
-          </ctl:call-test>
+              <!-- GET: GetObservation -->
+              <ctl:call-test name="ioosSos:getObservation-get">
+                <ctl:with-param name="getObservation" select="$config/getObservation" />
+                <ctl:with-param name="schema" select="$omSchema" />
+                <ctl:with-param name="serviceUrl" select="$serviceUrl" />
+                <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
+                <ctl:with-param name="testPattern" select="$testPattern" />
+                <ctl:with-param name="rootDir" select="$rootDir" />
+              </ctl:call-test>
 
-          <!-- POST: GetCapabilities -->
-          <ctl:call-test name="ioosSos:getCapabilities-post">
-            <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
-            <ctl:with-param name="schema" select="$capabilitiesSchema" />
-            <ctl:with-param name="testPattern" select="$testPattern" />
-            <ctl:with-param name="rootDir" select="$rootDir" />
-          </ctl:call-test>
+              <!-- POST: GetCapabilities -->
+              <ctl:call-test name="ioosSos:getCapabilities-post">
+                <ctl:with-param name="capabilitiesDocument" select="$capabilitiesDocument" />
+                <ctl:with-param name="schema" select="$capabilitiesSchema" />
+                <ctl:with-param name="testPattern" select="$testPattern" />
+                <ctl:with-param name="rootDir" select="$rootDir" />
+              </ctl:call-test>
+            </xsl:otherwise>
+          </xsl:choose>
         </xsl:otherwise>
       </xsl:choose>
     </ctl:code>
