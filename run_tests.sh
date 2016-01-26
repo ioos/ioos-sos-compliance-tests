@@ -1,11 +1,27 @@
 #!/bin/bash
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
-CONFIGFILE=$1
-TESTS=$2
-CTLDIR=$DIR/m1.0/ctl
 export TE_BASE=$DIR/.te_base
+CTLDIR=$DIR/m1.0/ctl
 
-[[ ! -z "$CONFIGFILE" ]] || { echo "Must provide config file path as argument" >&2; exit 1; }
+usage() { echo "Usage: $0 -c ./path/to/config.xml [-t tests]" 1>&2; exit 1; }
+
+CONFIGFILE=$1
+while getopts "c:t:" opt; do
+  case $opt in
+    c)
+      CONFIGFILE=${OPTARG}
+      ;;
+    t)
+      TESTS=${OPTARG}
+      ;;
+    *)
+      usage
+      ;;
+  esac
+done
+
+
+[[ ! -z "$CONFIGFILE" ]] || { usage; }
 [[ "$CONFIGFILE" == "/*" ]] || CONFIGFILE=`readlink -f "$CONFIGFILE"`
 [[ -f "$CONFIGFILE" ]] || { echo "Config file $CONFIGFILE doesn't exist" >&2; exit 1; }
 [[ -d "$CTLDIR" ]] || { echo "CTL directory $CTLDIR not found" >&2; exit 1; }
