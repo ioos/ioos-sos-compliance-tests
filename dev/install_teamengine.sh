@@ -6,11 +6,11 @@ command -v dos2unix >/dev/null 2>&1 || { echo "dos2unix must be installed" >&2; 
 
 DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 ROOT="$DIR"/..
-#GIT_REPO=git@github.com:opengeospatial/teamengine.git
-#TARGET=master
-GIT_REPO=git@github.com:shane-axiom/teamengine.git
+GIT_REPO=git@github.com:opengeospatial/teamengine.git
+TARGET=master
+#GIT_REPO=git@github.com:shane-axiom/teamengine.git
 #GIT_BRANCH=fix-inherited-failure
-GIT_BRANCH=unified
+#GIT_BRANCH=unified
 TE_BIN_ZIP=tmp/teamengine/teamengine-console/target/teamengine-console-*-bin.zip
 cd "$DIR"
 
