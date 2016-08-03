@@ -1,0 +1,12 @@
+.git
+.gitattributes
+.gitignore
+Dockerfile
+.dockerfile
+covered_tests.txt
+dev
+*.swp
+README.md
+run_tests.bat
+.te_base
+teamengine

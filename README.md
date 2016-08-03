@@ -17,6 +17,11 @@ This project is tested on Linux and Windows but should also run on Mac OS X.
 
 ## Usage
 
+### Docker
+
+If you're using Docker you don't need to worry about downloading binaries or installing dependencies.
+Skip down to the `Configuration` and `Run the tests (Docker)` sections below.
+
 ### Download release zip
 
 Download and unzip a release from the [release section](https://github.com/ioos/ioos-sos-compliance-tests/releases).
@@ -60,6 +65,32 @@ The example config targets the i52n development continuous integration build.
   </getObservation>
 </config>
 ```
+
+### Run the tests (Docker)
+
+(Note: this image is not yet published to Docker hub. In the meantime you can build it by checking
+out this repository and running `docker build -t ioos-sos-compliance-tests .`)
+
+First, create your config file. In this example the file is named `test-config.xml`. Then run:
+
+```
+docker run -t -v $(pwd)/test-config.xml:/tmp/config.xml --name ioos-sos-compliance-tests \
+  ioos/ioos-sos-compliance-tests ./run_tests.sh /tmp/config.xml
+```
+
+After the tests have run, you can copy teamengine's logs out of the Docker container to
+your host for further examination.
+
+```
+docker cp ioos-sos-compliance-tests:/srv/ioos-sos-compliance-tests/.te_base/users/ioos logs
+```
+
+Once you're finished, remove the Docker container.
+
+```
+docker rm ioos-sos-compliance-tests
+```
+
 
 ### Run the tests (Linux)
 
