@@ -75,6 +75,9 @@ docker run -t -v $(pwd)/test-config.xml:/tmp/config.xml --name ioos-sos-complian
   ioos/ioos-sos-compliance-tests ./run_tests.sh /tmp/config.xml
 ```
 
+Optionally, specify a specific Docker image version to run a specific release of `ioos-sos-compliance-tests`
+(e.g. `ioos/ioos-sos-compliance-tests:v1.0.1`).
+
 After the tests have run, you can copy teamengine's logs out of the Docker container to
 your host for further examination.
 
