@@ -68,9 +68,6 @@ The example config targets the i52n development continuous integration build.
 
 ### Run the tests (Docker)
 
-(Note: this image is not yet published to Docker hub. In the meantime you can build it by checking
-out this repository and running `docker build -t ioos-sos-compliance-tests .`)
-
 First, create your config file. In this example the file is named `test-config.xml`. Then run:
 
 ```
