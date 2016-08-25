@@ -5,3 +5,4 @@ tmp
 dev/logs
 dev/tmp
 *.swp
+test-config.xml
